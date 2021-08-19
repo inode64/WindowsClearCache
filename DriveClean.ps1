@@ -3,7 +3,7 @@
 #------------------------------------------------------------------#
 Function Clear-GlobalWindowsCache {
     Remove-Dir 'C:\Windows\Temp' 
-    Remove-Dir "C:\`$Recycle.Bin"
+    #Remove-Dir "C:\`$Recycle.Bin"
     Remove-Dir "C:\Windows\Prefetch"
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
@@ -79,7 +79,10 @@ Function Get-StorageSize {
 Function Remove-Dir {
     param([Parameter(Mandatory=$true)][string]$path)
 
-	Get-ChildItem -Path "$path" -force | get-childitem | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose 
+	if((Test-Path "$path"))
+	{
+		Get-ChildItem -Path "$path" -Force -ErrorAction SilentlyContinue | Get-ChildItem -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose
+	}
 }
 
 #Endregion HelperFunctions
