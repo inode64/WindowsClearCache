@@ -2,9 +2,9 @@
 #- Clear-GlobalWindowsCache                                        #
 #------------------------------------------------------------------#
 Function Clear-GlobalWindowsCache {
-    Remove-CacheFiles 'C:\Windows\Temp' 
-    Remove-CacheFiles "C:\`$Recycle.Bin"
-    Remove-CacheFiles "C:\Windows\Prefetch"
+    Remove-Dir 'C:\Windows\Temp' 
+    Remove-Dir "C:\`$Recycle.Bin"
+    Remove-Dir "C:\Windows\Prefetch"
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
 }
@@ -33,15 +33,14 @@ Function Clear-UserCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-WindowsUserCacheFiles {
     param([string]$user=$env:USERNAME)
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Temp"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Tiles"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\WER"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache\Low"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatCache"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatUaCache"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\IEDownloadHistory"
-    Remove-CacheFiles "C:\Users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files"    
+    Remove-Dir "C:\Users\$user\AppData\Local\Temp"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Tiles"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WER"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatCache"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatUaCache"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IEDownloadHistory"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files"    
 }
 
 #Region HelperFunctions
@@ -75,48 +74,12 @@ Function Get-StorageSize {
 }
 
 #------------------------------------------------------------------#
-#- Remove-CacheFiles                                               #
+#- Remove-Dir                                               #
 #------------------------------------------------------------------#
-Function Remove-CacheFiles {
-    param([Parameter(Mandatory=$true)][string]$path)    
-    BEGIN 
-    {
-        $originalVerbosePreference = $VerbosePreference
-        $VerbosePreference = 'Continue'  
-    }
-    PROCESS 
-    {
-        if((Test-Path $path))
-        {
-            if([System.IO.Directory]::Exists($path))
-            {
-                try 
-                {
-                    if($path[-1] -eq '\')
-                    {
-                        [int]$pathSubString = $path.ToCharArray().Count - 1
-                        $sanitizedPath = $path.SubString(0, $pathSubString)
-                        Remove-Item -Path "$sanitizedPath\*" -Recurse -Force -ErrorAction SilentlyContinue -Verbose
-                    }
-                    else 
-                    {
-                        Remove-Item -Path "$path\*" -Recurse -Force -ErrorAction SilentlyContinue -Verbose              
-                    } 
-                } catch { }
-            }
-            else 
-            {
-                try 
-                {
-                    Remove-Item -Path $path -Force -ErrorAction SilentlyContinue -Verbose
-                } catch { }
-            }
-        }    
-    }
-    END 
-    {
-        $VerbosePreference = $originalVerbosePreference
-    }
+Function Remove-Dir {
+    param([Parameter(Mandatory=$true)][string]$path)
+
+	Get-ChildItem -Path "$path" -force | get-childitem | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose 
 }
 
 #Endregion HelperFunctions
@@ -136,7 +99,7 @@ Function Clear-ChromeCacheFiles {
         $possibleCachePaths = @('Cache','Cache2\entries\','Code Cache','GPUCache','Service Worker','Top Sites','VisitedLinks','Web Data','Media Cache','ChromeDWriteFontCache')
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$chromeAppData\$cachePath"
+            Remove-Dir "$chromeAppData\$cachePath"
         }      
     } 
 }
@@ -152,7 +115,7 @@ Function Clear-EdgeCacheFiles {
         $possibleCachePaths = @('Cache','Cache2\entries','Top Sites','Visited Links','Web Data','Media History')
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$EdgeAppData$cachePath"
+            Remove-Dir "$EdgeAppData$cachePath"
         }
     }
 }
@@ -172,7 +135,7 @@ Function Clear-FirefoxCacheFiles {
         $firefoxAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Mozilla\Firefox\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName 
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$firefoxAppDataPath\$cachePath"
+            Remove-Dir "$firefoxAppDataPath\$cachePath"
         }
     } 
 }
@@ -188,7 +151,7 @@ Function Clear-WaterfoxCacheFiles {
         $waterfoxAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Waterfox\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$waterfoxAppDataPath\$cachePath"
+            Remove-Dir "$waterfoxAppDataPath\$cachePath"
         }
     }   
 }
@@ -210,7 +173,7 @@ Function Clear-TeamsCacheFiles {
         $teamsAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Roaming\Microsoft\Teams" | Where-Object { $_.Name -match 'Default' }[0]).FullName
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$teamsAppDataPath\$cachePath"
+            Remove-Dir "$teamsAppDataPath\$cachePath"
         }
     }   
 }
@@ -230,7 +193,7 @@ Function Clear-ThunderbirdCacheFiles {
         $ThunderbirdAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Thunderbird\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName 
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$ThunderbirdAppDataPath\$cachePath"
+            Remove-Dir "$ThunderbirdAppDataPath\$cachePath"
         }
     } 
 }
@@ -246,7 +209,7 @@ Function Clear-iTunesCacheFiles {
         $possibleCachePaths = @('SubscriptionPlayCache')
         ForEach($cachePath in $possibleCachePaths)
         {
-            Remove-CacheFiles "$iTunesAppDataPath\$cachePath"
+            Remove-Dir "$iTunesAppDataPath\$cachePath"
         }
     }   
 }
@@ -264,7 +227,7 @@ Function Clear-AcrobatCacheFiles {
 	{
             ForEach($cachePath in $possibleCachePaths)
             {
-                 Remove-CacheFiles "$DirName\$AcrobatAppDataPath\$cachePath"
+                 Remove-Dir "$DirName\$AcrobatAppDataPath\$cachePath"
             }
 	}
     } 
@@ -284,7 +247,7 @@ Function Clear-LibreOfficeCacheFiles {
 	{
             ForEach($cachePath in $possibleCachePaths)
             {
-                 Remove-CacheFiles "$DirName\$LibreOfficeAppDataPath\$cachePath"
+                 Remove-Dir "$DirName\$LibreOfficeAppDataPath\$cachePath"
             }
 	}
     } 
