@@ -92,19 +92,49 @@ Function Remove-Dir {
 #Region ChromiumBrowsers
 
 #------------------------------------------------------------------#
+#- Clear-ChromeTemplate                                            #
+#------------------------------------------------------------------#
+Function Clear-ChromeTemplate {
+    param([Parameter(Mandatory=$true)][string]$path)
+    param([Parameter(Mandatory=$true)][string]$name)
+
+    if((Test-Path $path))
+    {
+    	Write-Output "Clear cache $name"
+        $possibleCachePaths = @('Cache','Cache2\entries\','Code Cache','GPUCache','Service Worker','Top Sites','VisitedLinks','Web Data','Media Cache','ChromeDWriteFontCache')
+        ForEach($cachePath in $possibleCachePaths)
+        {
+            Remove-Dir "$path\$cachePath"
+        }
+    }
+}
+
+#------------------------------------------------------------------#
+#- Clear-MozillaTemplate                                           #
+#------------------------------------------------------------------#
+Function Clear-MozillaTemplate {
+    param([Parameter(Mandatory=$true)][string]$path)
+    param([Parameter(Mandatory=$true)][string]$name)
+
+    if((Test-Path $path))
+    {
+    	Write-Output "Clear cache $name"
+    	$AppDataPath = (Get-ChildItem "$path" | Where-Object { $_.Name -match 'Default' }[0]).FullName
+        $possibleCachePaths = @('cache','cache2\entries','thumbnails','webappsstore.sqlite','chromeappstore.sqlite')
+        ForEach($cachePath in $possibleCachePaths)
+        {
+            Remove-Dir "$AppDataPath\$cachePath"
+        }
+    }
+}
+
+
+#------------------------------------------------------------------#
 #- Clear-ChromeCache                                               #
 #------------------------------------------------------------------#
 Function Clear-ChromeCacheFiles {
     param([string]$user=$env:USERNAME)
-    if((Test-Path "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default"))
-    {
-        $chromeAppData = "C:\Users\$user\AppData\Local\Google\Chrome\User Data\Default" 
-        $possibleCachePaths = @('Cache','Cache2\entries\','Code Cache','GPUCache','Service Worker','Top Sites','VisitedLinks','Web Data','Media Cache','ChromeDWriteFontCache')
-        ForEach($cachePath in $possibleCachePaths)
-        {
-            Remove-Dir "$chromeAppData\$cachePath"
-        }      
-    } 
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default" "Browser Google Chome"
 }
 
 #------------------------------------------------------------------#
@@ -112,15 +142,7 @@ Function Clear-ChromeCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-EdgeCacheFiles {
     param([string]$user=$env:USERNAME)
-    if((Test-Path "C:\Users$user\AppData\Local\Microsoft\Edge\User Data\Default"))
-    {
-        $EdgeAppData = "C:\Users$user\AppData\Local\Microsoft\Edge\User Data\Default"
-        $possibleCachePaths = @('Cache','Cache2\entries','Top Sites','Visited Links','Web Data','Media History')
-        ForEach($cachePath in $possibleCachePaths)
-        {
-            Remove-Dir "$EdgeAppData$cachePath"
-        }
-    }
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default" "Browser Microsoft Edge"
 }
 
 #Endregion ChromiumBrowsers
@@ -132,15 +154,7 @@ Function Clear-EdgeCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-FirefoxCacheFiles {
     param([string]$user=$env:USERNAME)
-    if((Test-Path "C:\users\$user\AppData\Local\Mozilla\Firefox\Profiles"))
-    {
-        $possibleCachePaths = @('cache','cache2\entries','thumbnails','webappsstore.sqlite','chromeappstore.sqlite')
-        $firefoxAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Mozilla\Firefox\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName 
-        ForEach($cachePath in $possibleCachePaths)
-        {
-            Remove-Dir "$firefoxAppDataPath\$cachePath"
-        }
-    } 
+    Clear-MozillaTemplate "C:\users\$user\AppData\Local\Mozilla\Firefox\Profiles" "Browser Mozilla Firefox"
 }
 
 #------------------------------------------------------------------#
@@ -148,15 +162,7 @@ Function Clear-FirefoxCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-WaterfoxCacheFiles { 
     param([string]$user=$env:USERNAME)
-    if((Test-Path "C:\users\$user\AppData\Local\Waterfox\Profiles"))
-    {
-        $possibleCachePaths = @('cache','cache2\entries','thumbnails','webappsstore.sqlite','chromeappstore.sqlite')
-        $waterfoxAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Waterfox\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName
-        ForEach($cachePath in $possibleCachePaths)
-        {
-            Remove-Dir "$waterfoxAppDataPath\$cachePath"
-        }
-    }   
+    Clear-MozillaTemplate "C:\users\$user\AppData\Local\Waterfox\Profiles" "Browser Waterfox"
 }
 
 #Endregion FirefoxBrowsers
@@ -190,15 +196,7 @@ Function Clear-TeamsCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-ThunderbirdCacheFiles {
     param([string]$user=$env:USERNAME)
-    if((Test-Path "C:\users\$user\AppData\Local\Thunderbird\Profiles"))
-    {
-        $possibleCachePaths = @('cache','cache2\entries')
-        $ThunderbirdAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Local\Thunderbird\Profiles" | Where-Object { $_.Name -match 'Default' }[0]).FullName 
-        ForEach($cachePath in $possibleCachePaths)
-        {
-            Remove-Dir "$ThunderbirdAppDataPath\$cachePath"
-        }
-    } 
+    Clear-MozillaTemplate "C:\users\$user\AppData\Local\Thunderbird\Profiles" "Mozilla Thunderbird"
 }
 
 #------------------------------------------------------------------#
@@ -226,13 +224,13 @@ Function Clear-AcrobatCacheFiles {
     if((Test-Path "$DirName"))
     {
         $possibleCachePaths = @('Cache','ConnectorIcons')
-	ForEach($AcrobatAppDataPath in (Get-ChildItem "$DirName").Name)
-	{
+		ForEach($AcrobatAppDataPath in (Get-ChildItem "$DirName").Name)
+		{
             ForEach($cachePath in $possibleCachePaths)
             {
                  Remove-Dir "$DirName\$AcrobatAppDataPath\$cachePath"
             }
-	}
+		}
     } 
 }
 
@@ -246,13 +244,13 @@ Function Clear-LibreOfficeCacheFiles {
     if((Test-Path "$DirName"))
     {
         $possibleCachePaths = @('cache','crash','user\backup','user\temp')
-	ForEach($LibreOfficeAppDataPath in (Get-ChildItem "$DirName").Name)
-	{
+		ForEach($LibreOfficeAppDataPath in (Get-ChildItem "$DirName").Name)
+		{
             ForEach($cachePath in $possibleCachePaths)
             {
                  Remove-Dir "$DirName\$LibreOfficeAppDataPath\$cachePath"
             }
-	}
+		}
     } 
 }
 
