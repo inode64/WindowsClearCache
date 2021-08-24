@@ -16,15 +16,21 @@ Function Clear-UserCacheFiles {
     # Stop-BrowserSessions
     ForEach($localUser in (Get-ChildItem 'C:\users').Name)
     {
+        Clear-AcrobatCacheFiles $localUser
+        Clear-AVGCacheFiles $localUser
+        Clear-BattleNetCacheFiles $localUser
         Clear-ChromeCacheFiles $localUser
+        Clear-DiscordCacheFiles $localUser
         Clear-EdgeCacheFiles $localUser
+        Clear-EpicGamesCacheFiles $localUser
         Clear-FirefoxCacheFiles $localUser
+        Clear-iTunesCacheFiles $localUser
+        Clear-LibreOfficeCacheFiles $localUser
+        Clear-LolScreenSaverCacheFiles $localUser
+        Clear-SteamCacheFiles $localUser
+        Clear-TeamsCacheFiles $localUser
         Clear-ThunderbirdCacheFiles $localUser
         Clear-WindowsUserCacheFiles $localUser
-        Clear-TeamsCacheFiles $localUser
-        Clear-iTunesCacheFiles $localUser
-        Clear-AcrobatCacheFiles $localUser
-        Clear-LibreOfficeCacheFiles $localUser
     }
 }
 
@@ -35,12 +41,12 @@ Function Clear-WindowsUserCacheFiles {
     param([string]$user=$env:USERNAME)
     Remove-Dir "C:\Users\$user\AppData\Local\Temp"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Tiles"
-    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WER"
-    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IECompatUaCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IEDownloadHistory"
-    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files"    
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WER"
 }
 
 #Region HelperFunctions
@@ -198,6 +204,56 @@ Function Clear-ThunderbirdCacheFiles {
     param([string]$user=$env:USERNAME)
     Clear-MozillaTemplate "C:\users\$user\AppData\Local\Thunderbird\Profiles" "Mozilla Thunderbird"
 }
+
+#------------------------------------------------------------------#
+#- Clear-EpicGamesCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-EpicGamesCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\EpicGamesLauncher\Saved\webcache" "Epic Games Launcher"
+}
+
+#------------------------------------------------------------------#
+#- Clear-BattleNetCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-BattleNetCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Battle.net\BrowserCache" "BattleNet"
+}
+
+#------------------------------------------------------------------#
+#- Clear-SteamCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-SteamCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Steam\htmlcache" "Steam"
+}
+
+#------------------------------------------------------------------#
+#- Clear-LolScreenSaverCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-LolScreenSaverCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Discord" "Lol screen saver"
+}
+
+#------------------------------------------------------------------#
+#- Clear-DiscordCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-DiscordCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\LolScreenSaver\cefCache" "Discord"
+}
+
+#------------------------------------------------------------------#
+#- Clear-AVGCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-AVGCacheFiles {
+    param([string]$user=$env:USERNAME)
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\AVG\User Data\Default" "Antivir AVG"
+}
+
+
 
 #------------------------------------------------------------------#
 #- CleariTunesCacheFiles                                           #
