@@ -102,7 +102,7 @@ Function Remove-Dir {
 #------------------------------------------------------------------#
 Function Clear-ChromeTemplate {
     param(
-    	[Parameter(Mandatory=$true)][string]$path
+    	[Parameter(Mandatory=$true)][string]$path,
     	[Parameter(Mandatory=$true)][string]$name
 	)
 
@@ -122,7 +122,7 @@ Function Clear-ChromeTemplate {
 #------------------------------------------------------------------#
 Function Clear-MozillaTemplate {
     param(
-    	[Parameter(Mandatory=$true)][string]$path
+    	[Parameter(Mandatory=$true)][string]$path,
     	[Parameter(Mandatory=$true)][string]$name
 	)
 
