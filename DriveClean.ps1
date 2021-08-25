@@ -95,8 +95,10 @@ Function Remove-Dir {
 #- Clear-ChromeTemplate                                            #
 #------------------------------------------------------------------#
 Function Clear-ChromeTemplate {
-    param([Parameter(Mandatory=$true)][string]$path)
-    param([Parameter(Mandatory=$true)][string]$name)
+    param(
+    	[Parameter(Mandatory=$true)][string]$path
+    	[Parameter(Mandatory=$true)][string]$name
+	)
 
     if((Test-Path $path))
     {
@@ -113,8 +115,10 @@ Function Clear-ChromeTemplate {
 #- Clear-MozillaTemplate                                           #
 #------------------------------------------------------------------#
 Function Clear-MozillaTemplate {
-    param([Parameter(Mandatory=$true)][string]$path)
-    param([Parameter(Mandatory=$true)][string]$name)
+    param(
+    	[Parameter(Mandatory=$true)][string]$path
+    	[Parameter(Mandatory=$true)][string]$name
+	)
 
     if((Test-Path $path))
     {
