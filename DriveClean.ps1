@@ -150,6 +150,7 @@ Function Clear-MozillaTemplate {
 Function Clear-ChromeCacheFiles {
     param([string]$user=$env:USERNAME)
     Clear-ChromeTemplate "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default" "Browser Google Chome"
+    Remove-Dir "C:\users\$user\AppData\Local\Google\Chrome\User Data\SwReporter\"
 }
 
 #------------------------------------------------------------------#
