@@ -149,7 +149,7 @@ Function Clear-MozillaTemplate {
 #------------------------------------------------------------------#
 Function Clear-ChromeCacheFiles {
     param([string]$user=$env:USERNAME)
-    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default" "Browser Google Chome"
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default" "Browser Google Chrome"
     Remove-Dir "C:\users\$user\AppData\Local\Google\Chrome\User Data\SwReporter\"
 }
 
@@ -260,7 +260,7 @@ Function Clear-DiscordCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-AVGCacheFiles {
     param([string]$user=$env:USERNAME)
-	Clear-ChromeTemplate "C:\users\$user\AppData\Local\AVG\User Data\Default" "Antivir AVG"
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\AVG\User Data\Default" "Antivirus AVG"
 }
 
 
