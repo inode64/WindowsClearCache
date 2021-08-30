@@ -7,6 +7,11 @@ Function Clear-GlobalWindowsCache {
     Remove-Dir "C:\Windows\Prefetch"
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
+
+	# Remove printer queued files
+ 	Stop-Service -Name "spooler"
+ 	Remove-Dir "C:\Windows\System32\spool\PRINTERS\"
+	Start-Service -Name "spooler"
 }
 
 #------------------------------------------------------------------#
