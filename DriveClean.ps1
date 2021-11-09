@@ -2,15 +2,15 @@
 #- Clear-GlobalWindowsCache                                        #
 #------------------------------------------------------------------#
 Function Clear-GlobalWindowsCache {
-    Remove-Dir "%systemdrive%\Windows\Temp"
-    #Remove-Dir "%systemdrive%\`$Recycle.Bin"
-    Remove-Dir "%systemdrive%\Windows\Prefetch"
-    %systemdrive%\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
-    %systemdrive%\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
+    Remove-Dir "C:\Windows\Temp"
+    #Remove-Dir "C:\`$Recycle.Bin"
+    Remove-Dir "C:\Windows\Prefetch"
+    C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
+    C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
 
 	# Remove printer queued files
  	Stop-Service -Name "spooler"
- 	Remove-Dir "%systemdrive%\Windows\System32\spool\PRINTERS\"
+ 	Remove-Dir "C:\Windows\System32\spool\PRINTERS\"
 	Start-Service -Name "spooler"
 }
 
