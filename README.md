@@ -16,6 +16,28 @@ To run this with parameters, do the following:
 
 e.g. - `.\Windows10SysPrepDebloater.ps1`
 
+## Tested on following Windows Versions
+
+Verified on the following platforms:
+
+|Windows Version         |Yes/No?|
+|:-----------------------|:-----:|
+| Windows Server 2019    | Yes    |
+| Windows Server 2016    | Yes   |
+| Windows Server 2012 R2 | Yes   |
+| Windows Server 2012    | Yes   |
+| Windows Server 2008 R2 | Yes   |
+| Windows Server 2008    | Yes   |
+| Windows Server 2003    | No    |
+| Windows 10             | Yes   |
+| Windows 8              | No    |
+| Windows 7              | No    |
+| Windows Vista          | No    |
+| Windows XP             | No    |
+| Windows 2000           | No    |
+
+It is likely to work on other platforms as well. If you try it and find that it works on another platform, please let me know.
+
 ## Disclaimer
 
 **WARNING:** I do **NOT** take responsibility for what may happen to your system! Run scripts at your own risk!
