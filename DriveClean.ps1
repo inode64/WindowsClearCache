@@ -46,6 +46,7 @@ Function Clear-UserCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-WindowsUserCacheFiles {
     param([string]$user=$env:USERNAME)
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Cache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Recovery"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Tiles"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Terminal Server Client\Cache"
