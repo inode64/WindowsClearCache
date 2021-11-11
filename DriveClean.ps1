@@ -3,6 +3,8 @@
 #------------------------------------------------------------------#
 Function Clear-GlobalWindowsCache {
     Remove-Dir "C:\Windows\Temp"
+    Remove-Dir "C:\Temp"
+    Remove-Dir "C:\tmp"
     #Remove-Dir "C:\`$Recycle.Bin"
     Remove-Dir "C:\Windows\Prefetch"
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
