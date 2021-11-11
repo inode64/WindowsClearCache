@@ -166,7 +166,8 @@ Function Clear-ChromeCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-EdgeCacheFiles {
     param([string]$user=$env:USERNAME)
-    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default" "Browser Microsoft Edge"
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default" "Browser Microsoft Edge"ç
+    Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default\CacheStorage"
 }
 
 #Endregion ChromiumBrowsers
@@ -208,7 +209,7 @@ Function Clear-TeamsCacheFiles {
         {
             Remove-Dir "$teamsAppDataPath\$cachePath"
         }
-    }   
+    }
 }
 
 #Endregion CommunicationPlatforms
