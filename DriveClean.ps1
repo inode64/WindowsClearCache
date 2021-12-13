@@ -31,9 +31,11 @@ Function Clear-UserCacheFiles {
         Clear-EdgeCacheFiles $localUser
         Clear-EpicGamesCacheFiles $localUser
         Clear-FirefoxCacheFiles $localUser
+        Clear-GoogleEarth $localUser
         Clear-iTunesCacheFiles $localUser
         Clear-LibreOfficeCacheFiles $localUser
         Clear-LolScreenSaverCacheFiles $localUser
+        Clear-MicrosoftOfficeCacheFiles $localUser
         Clear-SteamCacheFiles $localUser
         Clear-TeamsCacheFiles $localUser
         Clear-ThunderbirdCacheFiles $localUser
@@ -272,7 +274,18 @@ Function Clear-AVGCacheFiles {
 	Clear-ChromeTemplate "C:\users\$user\AppData\Local\AVG\User Data\Default" "Antivirus AVG"
 }
 
-
+#------------------------------------------------------------------#
+#- Clear Google Earth                                              #
+#------------------------------------------------------------------#
+Function Clear-GoogleEarth {
+	param([string]$user=$env:USERNAME)
+	if(Test-Path C:\users\$user\AppData\LocalLow\Google\GoogleEarth) {
+    	Get-ChildItem "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2\" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+        Get-ChildItem "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata\" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+    }
+}
 
 #------------------------------------------------------------------#
 #- CleariTunesCacheFiles                                           #
@@ -309,6 +322,24 @@ Function Clear-AcrobatCacheFiles {
     } 
 }
 
+#------------------------------------------------------------------#
+#- Clear-MicrosoftOfficeCacheFiles                                 #
+#------------------------------------------------------------------#
+Function Clear-MicrosoftOfficeCacheFiles {
+	param([string]$user=$env:USERNAME)
+	if((Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook")) {
+		Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst" -Recurse -Force -ErrorAction SilentlyContinue |
+        	remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+    	Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+		Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook\*" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+    	Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO\*" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word\*" -Recurse -Force -ErrorAction SilentlyContinue |
+            remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+	}
+}
 
 #------------------------------------------------------------------#
 #- Clear-LibreOfficeCacheFiles                                     #
