@@ -322,7 +322,7 @@ Function Clear-SteamCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-LolScreenSaverCacheFiles {
     param([string]$user=$env:USERNAME)
-	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Discord" "Lol screen saver"
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\LolScreenSaver\cefCache" "Lol screen saver"
 }
 
 #------------------------------------------------------------------#
@@ -330,7 +330,7 @@ Function Clear-LolScreenSaverCacheFiles {
 #------------------------------------------------------------------#
 Function Clear-DiscordCacheFiles {
     param([string]$user=$env:USERNAME)
-	Clear-ChromeTemplate "C:\users\$user\AppData\Local\LolScreenSaver\cefCache" "Discord"
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Discord" "Discord"
 }
 
 #------------------------------------------------------------------#
