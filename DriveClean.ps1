@@ -107,7 +107,7 @@ function WUSStopped() {
     # Getting free disk space before the cleaning actions
     Write-Host " Free Disk Space before: " -ForegroundColor Blue -NoNewline
     $Before = FreeDiskSpace
-    Write-Host "$Before GB"
+    Write-Host "$Before MB"
 
     Write-Host " Cleaning Files..." -ForegroundColor Blue -NoNewline
     Get-ChildItem -LiteralPath $env:windir\SoftwareDistribution\Download\ -Recurse | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
@@ -116,12 +116,12 @@ function WUSStopped() {
     # Getting free disk space after the cleaning actions
     Write-Host " Free Disk Space after: " -ForegroundColor Blue -NoNewline
     $After = FreeDiskSpace
-    Write-Host "$After GB"
+    Write-Host "$After MB"
 
     # Calculating the free disk space difference
     Write-Host " Cleaned: " -ForegroundColor Blue -NoNewline
     $Cleaned = $After - $Before
-    Write-Host "$Cleaned GB"
+    Write-Host "$Cleaned MB"
 }
 
 # Program
@@ -129,6 +129,14 @@ if (CheckWUS) {
     WUSStopped
 } else {
     WUSRunning
+}
+
+Function FreeDiskSpace {
+	param(
+		[string]$DiskLetter = 'C'
+	)
+
+	return ([math]::Round((Get-Volume -DriveLetter $DiskLetter | select @{Name="MB";Expression={$_.SizeRemaining/1MB}}).MB, 2))
 }
 
 #Region HelperFunctions
