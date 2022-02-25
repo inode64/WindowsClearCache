@@ -101,7 +101,16 @@ function WUSRunning() {
     # Starting the Windows Update Service again
     StartWUS
 }
-function WUSStopped() {
+
+Function FreeDiskSpace() {
+    param(
+        [string]$DiskLetter = 'C'
+    )
+
+    return ([math]::Round((Get-Volume -DriveLetter $DiskLetter | Select-Object @{Name="MB";Expression={$_.SizeRemaining/1MB}}).MB, 2))
+}
+
+Function WUSStopped() {
     Write-Host "Windows Update Service is Stopped..." -ForegroundColor Green
 
     # Getting free disk space before the cleaning actions
@@ -131,13 +140,6 @@ if (CheckWUS) {
     WUSRunning
 }
 
-Function FreeDiskSpace {
-	param(
-		[string]$DiskLetter = 'C'
-	)
-
-	return ([math]::Round((Get-Volume -DriveLetter $DiskLetter | select @{Name="MB";Expression={$_.SizeRemaining/1MB}}).MB, 2))
-}
 
 #Region HelperFunctions
 
