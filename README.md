@@ -5,9 +5,9 @@ Simple scripts to clear temp files and browser cache/history
 
 To run this with parameters, do the following:
 
-1) Download the .zip file on the main page of the GitHub and extract the .zip file to your desired location
+1) Download the .zip file on the main page of the GitHub and extract the .zip file to your desired location, e.g. - `c:\WindowsClearCache`
 2) Once extracted, open [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting) (or [PowerShell ISE](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/introducing-the-windows-powershell-ise)) as an Administrator
-3) Enable PowerShell execution Set-ExecutionPolicy Unrestricted -Force (to allow executing unsigned code)
+3) Enable PowerShell execution: `Set-ExecutionPolicy Unrestricted -Force` (to allow executing unsigned code)
 4) On the prompt, change to the directory where you extracted the files:
 e.g. - `cd c:\WindowsClearCache`
 5) Next, to run the script, enter in the following:
