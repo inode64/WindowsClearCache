@@ -204,7 +204,6 @@ Function Remove-Dir
     if ((Test-Path "$path"))
     {
         Get-ChildItem -Path "$path" -Force -ErrorAction SilentlyContinue | Get-ChildItem -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose
-        Get-ChildItem -Path "$path" -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose
     }
 }
 
@@ -314,8 +313,8 @@ Function Clear-TeamsCacheFiles
     param([string]$user = $env:USERNAME)
     if ((Test-Path "C:\users\$user\AppData\Roaming\Microsoft\Teams"))
     {
-        $possibleCachePaths = @("application cache\cache", "blob_storage", "cache", "Code Cache", "databases", "gpucache", "Indexeddb", "Local Storage", "logs", "tmp", "Service Worker\CacheStorage")
-        $teamsAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Roaming\Microsoft\Teams" | Where-Object { $_.Name -match "Default" }[0]).FullName
+        $possibleCachePaths = @("application cache\cache", "blob_storage", "Cache", "Code Cache", "GPUCache", "logs", "tmp", "Service Worker\CacheStorage", "Service Worker\ScriptCache")
+        $teamsAppDataPath = "C:\users\$user\AppData\Roaming\Microsoft\Teams"
         ForEach ($cachePath in $possibleCachePaths)
         {
             Remove-Dir "$teamsAppDataPath\$cachePath"
