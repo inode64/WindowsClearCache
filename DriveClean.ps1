@@ -314,7 +314,7 @@ Function Clear-TeamsCacheFiles
     param([string]$user = $env:USERNAME)
     if ((Test-Path "C:\users\$user\AppData\Roaming\Microsoft\Teams"))
     {
-        $possibleCachePaths = @("application cache\cache", "blob_storage", "cache", "Code Cache", "databases", "gpucache", "Indexeddb", "Local Storage", "logs", "tmp")
+        $possibleCachePaths = @("application cache\cache", "blob_storage", "cache", "Code Cache", "databases", "gpucache", "Indexeddb", "Local Storage", "logs", "tmp", "Service Worker\CacheStorage")
         $teamsAppDataPath = (Get-ChildItem "C:\users\$user\AppData\Roaming\Microsoft\Teams" | Where-Object { $_.Name -match "Default" }[0]).FullName
         ForEach ($cachePath in $possibleCachePaths)
         {
