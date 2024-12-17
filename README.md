@@ -19,6 +19,8 @@ Verified on the following platforms:
 
 |Windows Version         |Yes/No?|
 |:-----------------------|:-----:|
+| Windows Server 2025    | ???   |
+| Windows Server 2022    | ???   |
 | Windows Server 2019    | Yes   |
 | Windows Server 2016    | Yes   |
 | Windows Server 2012 R2 | Yes   |
@@ -26,6 +28,7 @@ Verified on the following platforms:
 | Windows Server 2008 R2 | Yes   |
 | Windows Server 2008    | Yes   |
 | Windows Server 2003    | No    |
+| Windows 11             | ???   |
 | Windows 10             | Yes   |
 | Windows 8              | ???   |
 | Windows 7              | ???   |
