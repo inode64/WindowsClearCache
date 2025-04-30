@@ -29,7 +29,7 @@ Verified on the following platforms:
 | Windows Server 2008 R2 | Yes   |
 | Windows Server 2008    | Yes   |
 | Windows Server 2003    | No    |
-| Windows 11             | ???   |
+| Windows 11             | Yes   |
 | Windows 10             | Yes   |
 | Windows 8              | ???   |
 | Windows 7              | ???   |
