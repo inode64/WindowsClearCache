@@ -148,17 +148,6 @@ Function WUSStopped
     Write-Host "$Cleaned MB"
 }
 
-# Program
-if (CheckWUS)
-{
-    WUSStopped
-}
-else
-{
-    WUSRunning
-}
-
-
 #Region HelperFunctions
 
 #------------------------------------------------------------------#
@@ -492,10 +481,19 @@ $StartTime = (Get-Date)
 
 Get-StorageSize
 
+if (CheckWUS)
+{
+    WUSStopped
+}
+else
+{
+    WUSRunning
+}
+
 Clear-UserCacheFiles
 Clear-GlobalWindowsCache
 
 Get-StorageSize
 
 $EndTime = (Get-Date)
-Write-Verbose "Elapsed Time: $( ($StartTime - $EndTime).totalseconds ) seconds"
+Write-Verbose "Elapsed Time: $( ($EndTime - $StartTime).totalseconds ) seconds"
