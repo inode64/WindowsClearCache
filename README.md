@@ -1,6 +1,6 @@
 # WindowsClearCache
 
-Simple scripts to clear temp files and browser cache/history
+Simple scripts to clear temp files, browser cache/history, and caches for applications like Microsoft Teams, Slack, and Discord
 
 ## How To Run
 

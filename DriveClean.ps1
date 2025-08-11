@@ -38,6 +38,7 @@ Function Clear-UserCacheFiles
         Clear-LibreOfficeCacheFiles $localUser
         Clear-LolScreenSaverCacheFiles $localUser
         Clear-MicrosoftOfficeCacheFiles $localUser
+        Clear-SlackCacheFiles $localUser
         Clear-SteamCacheFiles $localUser
         Clear-TeamsCacheFiles $localUser
         Clear-ThunderbirdCacheFiles $localUser
@@ -309,6 +310,15 @@ Function Clear-TeamsCacheFiles
             Remove-Dir "$teamsAppDataPath\$cachePath"
         }
     }
+}
+
+#------------------------------------------------------------------#
+#- Clear-SlackCacheFiles                                           #
+#------------------------------------------------------------------#
+Function Clear-SlackCacheFiles
+{
+    param([string]$user = $env:USERNAME)
+    Clear-ChromeTemplate "C:\users\$user\AppData\Roaming\Slack" "Slack"
 }
 
 #Endregion CommunicationPlatforms
