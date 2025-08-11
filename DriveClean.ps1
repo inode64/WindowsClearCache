@@ -23,8 +23,16 @@ Function Clear-GlobalWindowsCache
 Function Clear-UserCacheFiles
 {
     # Stop-BrowserSessions
-    ForEach ($localUser in (Get-ChildItem "C:\users").Name)
+    # Use only real user directories
+    $excludedUsers = @("All Users", "Default", "Default User", "Public")
+    ForEach ($userDir in Get-ChildItem "C:\users" -Directory)
     {
+        if ($excludedUsers -contains $userDir.Name)
+        {
+            continue
+        }
+
+        $localUser = $userDir.Name
         Clear-AcrobatCacheFiles $localUser
         Clear-AVGCacheFiles $localUser
         Clear-BattleNetCacheFiles $localUser
