@@ -1,6 +1,6 @@
 # WindowsClearCache
 
-Simple scripts to clear temp files, browser cache/history, and caches for applications like Microsoft Teams, Slack, and Discord
+Simple scripts to clear temp files, browser cache/history, caches for applications like Microsoft Teams, Slack, and Discord, and remove Windows Defender scan and definition update backups, including the NisBackup folder
 
 ## How To Run
 

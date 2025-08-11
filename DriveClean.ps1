@@ -15,6 +15,17 @@ Function Clear-GlobalWindowsCache
     Stop-Service -Name "spooler"
     Remove-Dir "C:\Windows\System32\spool\PRINTERS\"
     Start-Service -Name "spooler"
+    Clear-WindowsDefenderBackups
+}
+
+#------------------------------------------------------------------#
+#- Clear-WindowsDefenderBackups                                    #
+#------------------------------------------------------------------#
+Function Clear-WindowsDefenderBackups
+{
+    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\History\Backup"
+    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\Backup"
+    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\NisBackup"
 }
 
 #------------------------------------------------------------------#
