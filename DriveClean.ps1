@@ -1,3 +1,11 @@
+[CmdletBinding()]
+param(
+    [switch]$DryRun
+)
+
+$Global:RemovedFiles = 0
+$Global:FreedBytes = 0
+
 #------------------------------------------------------------------#
 #- Clear-GlobalWindowsCache                                        #
 #------------------------------------------------------------------#
@@ -146,7 +154,8 @@ Function WUSStopped
     Write-Host "$Before MB"
 
     Write-Host " Cleaning Files..." -ForegroundColor Blue -NoNewline
-    Get-ChildItem -LiteralPath $env:windir\SoftwareDistribution\Download\ -Recurse | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+    Get-ChildItem -LiteralPath "$env:windir\SoftwareDistribution\Download\" -Force -ErrorAction SilentlyContinue |
+        ForEach-Object { Remove-Dir $_.FullName }
     Write-Host "Done..." -ForegroundColor Green
 
     # Getting free disk space after the cleaning actions
@@ -202,9 +211,33 @@ Function Remove-Dir
 {
     param([Parameter(Mandatory = $true)][string]$path)
 
-    if ((Test-Path "$path"))
+    if (Test-Path "$path")
     {
-        Get-ChildItem -Path "$path" -Force -Recurse -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Verbose
+        $root = Get-Item -LiteralPath "$path" -Force -ErrorAction SilentlyContinue
+
+        if ($root.PSIsContainer)
+        {
+            $items = Get-ChildItem -Path "$path" -Force -Recurse -ErrorAction SilentlyContinue
+            $files = $items | Where-Object { -not $_.PSIsContainer }
+            $Global:RemovedFiles += $files.Count
+            $Global:FreedBytes += ($files | Measure-Object -Property Length -Sum).Sum
+            $allItems = @($root) + $items
+        }
+        else
+        {
+            $Global:RemovedFiles += 1
+            $Global:FreedBytes += $root.Length
+            $allItems = @($root)
+        }
+
+        foreach ($item in $allItems) {
+            $action = $DryRun ? 'Would remove' : 'Removing'
+            Write-Verbose "$action $($item.FullName)"
+        }
+
+        if (-not $DryRun) {
+            Remove-Item -Path "$path" -Recurse -Force -ErrorAction SilentlyContinue
+        }
     }
 }
 
@@ -407,10 +440,8 @@ Function Clear-GoogleEarth
     param([string]$user = $env:USERNAME)
     if (Test-Path C:\users\$user\AppData\LocalLow\Google\GoogleEarth)
     {
-        Get-ChildItem "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2\" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
-        Get-ChildItem "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata\" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2\"
+        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata\"
     }
 }
 
@@ -460,15 +491,15 @@ Function Clear-MicrosoftOfficeCacheFiles
     if ((Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook"))
     {
         Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+            ForEach-Object { Remove-Dir $_.FullName }
         Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook\*" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO\*" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word\*" -Recurse -Force -ErrorAction SilentlyContinue |
-                remove-item -force -recurse -ErrorAction SilentlyContinue -Verbose
+            ForEach-Object { Remove-Dir $_.FullName }
+        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook\*" -Force -ErrorAction SilentlyContinue |
+            ForEach-Object { Remove-Dir $_.FullName }
+        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO\*" -Force -ErrorAction SilentlyContinue |
+            ForEach-Object { Remove-Dir $_.FullName }
+        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word\*" -Force -ErrorAction SilentlyContinue |
+            ForEach-Object { Remove-Dir $_.FullName }
     }
 }
 
@@ -517,4 +548,10 @@ Clear-GlobalWindowsCache
 Get-StorageSize
 
 $EndTime = (Get-Date)
+$mbFreed = [Math]::Round($Global:FreedBytes / 1MB, 2)
+if ($DryRun) {
+    Write-Host "DRY RUN: $($Global:RemovedFiles) files would be removed freeing $mbFreed MB"
+} else {
+    Write-Host "$($Global:RemovedFiles) files removed freeing $mbFreed MB"
+}
 Write-Verbose "Elapsed Time: $( ($EndTime - $StartTime).totalseconds ) seconds"

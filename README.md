@@ -14,6 +14,11 @@ e.g. - `cd c:\WindowsClearCache`
 5) Next, to run the script, enter in the following:
 e.g. - `.\DriveClean.ps1`
 
+Optional flags:
+
+- Use `-DryRun` to preview the files that would be deleted without removing them.
+- Use `-Verbose` to display each file as it is deleted (or would be deleted in dry run).
+
 ## Tested on following Windows Versions
 
 Verified on the following platforms:
