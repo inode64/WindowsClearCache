@@ -257,7 +257,7 @@ Function Clear-ChromeTemplate
         [Parameter(Mandatory = $true)][string]$name
     )
 
-    if ((Test-Path $path))
+    if (Test-Path "$path")
     {
         Write-Output "Clear cache $name"
         $possibleCachePaths = @("Cache", "Cache2\entries\", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
@@ -278,7 +278,7 @@ Function Clear-MozillaTemplate
         [Parameter(Mandatory = $true)][string]$name
     )
 
-    if ((Test-Path $path))
+    if (Test-Path "$path")
     {
         Write-Output "Clear cache $name"
         $AppDataPath = (Get-ChildItem "$path" | Where-Object { $_.Name -match "Default" }[0]).FullName
@@ -345,7 +345,7 @@ Function Clear-WaterfoxCacheFiles
 Function Clear-TeamsCacheFiles
 {
     param([string]$user = $env:USERNAME)
-    if ((Test-Path "C:\users\$user\AppData\Roaming\Microsoft\Teams"))
+    if (Test-Path "C:\users\$user\AppData\Roaming\Microsoft\Teams")
     {
         $possibleCachePaths = @("application cache\cache", "blob_storage", "Cache", "Code Cache", "GPUCache", "logs", "tmp", "Service Worker\CacheStorage", "Service Worker\ScriptCache")
         $teamsAppDataPath = "C:\users\$user\AppData\Roaming\Microsoft\Teams"
@@ -438,7 +438,7 @@ Function Clear-AVGCacheFiles
 Function Clear-GoogleEarth
 {
     param([string]$user = $env:USERNAME)
-    if (Test-Path C:\users\$user\AppData\LocalLow\Google\GoogleEarth)
+    if (Test-Path "C:\users\$user\AppData\LocalLow\Google\GoogleEarth")
     {
         Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2\"
         Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata\"
@@ -451,7 +451,7 @@ Function Clear-GoogleEarth
 Function Clear-iTunesCacheFiles
 {
     param([string]$user = $env:USERNAME)
-    if ((Test-Path "C:\users\$user\AppData\Local\Apple Computer\iTunes"))
+    if (Test-Path "C:\users\$user\AppData\Local\Apple Computer\iTunes")
     {
         $iTunesAppDataPath = "C:\users\$user\AppData\Local\Apple Computer\iTunes"
         $possibleCachePaths = @("SubscriptionPlayCache")
@@ -469,7 +469,7 @@ Function Clear-AcrobatCacheFiles
 {
     param([string]$user = $env:USERNAME)
     $DirName = "C:\users\$user\AppData\LocalLow\Adobe\Acrobat"
-    if ((Test-Path "$DirName"))
+    if (Test-Path "$DirName")
     {
         $possibleCachePaths = @("Cache", "ConnectorIcons")
         ForEach ($AcrobatAppDataPath in (Get-ChildItem "$DirName").Name)
@@ -488,7 +488,7 @@ Function Clear-AcrobatCacheFiles
 Function Clear-MicrosoftOfficeCacheFiles
 {
     param([string]$user = $env:USERNAME)
-    if ((Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook"))
+    if (Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook")
     {
         Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst" -Recurse -Force -ErrorAction SilentlyContinue |
             ForEach-Object { Remove-Dir $_.FullName }
@@ -510,7 +510,7 @@ Function Clear-LibreOfficeCacheFiles
 {
     param([string]$user = $env:USERNAME)
     $DirName = "C:\users\$user\AppData\Roaming\LibreOffice"
-    if ((Test-Path "$DirName"))
+    if (Test-Path "$DirName")
     {
         $possibleCachePaths = @("cache", "crash", "user\backup", "user\temp")
         ForEach ($LibreOfficeAppDataPath in (Get-ChildItem "$DirName").Name)
