@@ -11,6 +11,7 @@ $Global:FreedBytes = 0
 #------------------------------------------------------------------#
 Function Clear-GlobalWindowsCache
 {
+	Write-Output "Clearing global Windows cache..."
     Remove-Dir "C:\Windows\Temp"
     Remove-Dir "C:\Temp"
     Remove-Dir "C:\tmp"
@@ -19,7 +20,7 @@ Function Clear-GlobalWindowsCache
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
 
-    # Remove printer queued files
+	Write-Output "Clearing printer cache..."
     Stop-Service -Name "spooler"
     Remove-Dir "C:\Windows\System32\spool\PRINTERS"
     Start-Service -Name "spooler"
@@ -214,6 +215,7 @@ Function Remove-Dir
     {
 		$items = Get-ChildItem -Path "$path" -Force -Recurse -ErrorAction SilentlyContinue
 		$files = $items | Where-Object { -not $_.PSIsContainer }
+		$dirs  = $items | Where-Object { $_.PSIsContainer }
 		$Global:RemovedFiles += $items.Count
 		$Global:FreedBytes += ($files | Measure-Object -Property Length -Sum).Sum
 
@@ -227,7 +229,8 @@ Function Remove-Dir
         }
 
 		if (-not $DryRun) {
-			$items | Remove-Item -Force -ErrorAction SilentlyContinue
+			$files | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+			$dirs | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 		}
     }
 }
