@@ -217,8 +217,12 @@ Function Remove-Dir
 		$Global:RemovedFiles += $items.Count
 		$Global:FreedBytes += ($files | Measure-Object -Property Length -Sum).Sum
 
+		if ($DryRun) {
+			$action = 'Would remove'
+		} else {
+			$action = 'Removing'
+		}
         foreach ($item in $items) {
-            $action = $DryRun ? 'Would remove' : 'Removing'
             Write-Verbose "$action $($item.FullName)"
         }
 
