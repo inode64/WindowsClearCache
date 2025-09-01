@@ -21,7 +21,7 @@ Function Clear-GlobalWindowsCache
 
     # Remove printer queued files
     Stop-Service -Name "spooler"
-    Remove-Dir "C:\Windows\System32\spool\PRINTERS\"
+    Remove-Dir "C:\Windows\System32\spool\PRINTERS"
     Start-Service -Name "spooler"
     Clear-WindowsDefenderBackups
 }
@@ -154,8 +154,7 @@ Function WUSStopped
     Write-Host "$Before MB"
 
     Write-Host " Cleaning Files..." -ForegroundColor Blue -NoNewline
-    Get-ChildItem -LiteralPath "$env:windir\SoftwareDistribution\Download\" -Force -ErrorAction SilentlyContinue |
-        ForEach-Object { Remove-Dir $_.FullName }
+    Remove-dir "$env:windir\SoftwareDistribution\Download"
     Write-Host "Done..." -ForegroundColor Green
 
     # Getting free disk space after the cleaning actions
@@ -213,7 +212,7 @@ Function Remove-Dir
 
     if (Test-Path "$path")
     {
-        $root = Get-Item -LiteralPath "$path" -Force -ErrorAction SilentlyContinue
+        $root = Get-Item -Path "$path" -Force -ErrorAction SilentlyContinue
 
         if ($root.PSIsContainer)
         {
@@ -260,7 +259,7 @@ Function Clear-ChromeTemplate
     if (Test-Path "$path")
     {
         Write-Output "Clear cache $name"
-        $possibleCachePaths = @("Cache", "Cache2\entries\", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
+        $possibleCachePaths = @("Cache", "Cache2\entries", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
         ForEach ($cachePath in $possibleCachePaths)
         {
             Remove-Dir "$path\$cachePath"
@@ -298,7 +297,7 @@ Function Clear-ChromeCacheFiles
 {
     param([string]$user = $env:USERNAME)
     Clear-ChromeTemplate "C:\users\$user\AppData\Local\Google\Chrome\User Data\Default" "Browser Google Chrome"
-    Remove-Dir "C:\users\$user\AppData\Local\Google\Chrome\User Data\SwReporter\"
+    Remove-Dir "C:\users\$user\AppData\Local\Google\Chrome\User Data\SwReporter"
 }
 
 #------------------------------------------------------------------#
@@ -440,8 +439,8 @@ Function Clear-GoogleEarth
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\LocalLow\Google\GoogleEarth")
     {
-        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2\"
-        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata\"
+        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2"
+        Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata"
     }
 }
 
@@ -490,16 +489,11 @@ Function Clear-MicrosoftOfficeCacheFiles
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook")
     {
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst" -Recurse -Force -ErrorAction SilentlyContinue |
-            ForEach-Object { Remove-Dir $_.FullName }
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost" -Recurse -Force -ErrorAction SilentlyContinue |
-            ForEach-Object { Remove-Dir $_.FullName }
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook\*" -Force -ErrorAction SilentlyContinue |
-            ForEach-Object { Remove-Dir $_.FullName }
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO\*" -Force -ErrorAction SilentlyContinue |
-            ForEach-Object { Remove-Dir $_.FullName }
-        Get-ChildItem "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word\*" -Force -ErrorAction SilentlyContinue |
-            ForEach-Object { Remove-Dir $_.FullName }
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word"
     }
 }
 
