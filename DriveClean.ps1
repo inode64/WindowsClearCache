@@ -212,24 +212,12 @@ Function Remove-Dir
 
     if (Test-Path "$path")
     {
-        $root = Get-Item -Path "$path" -Force -ErrorAction SilentlyContinue
+		$items = Get-ChildItem -Path "$path" -Force -Recurse -ErrorAction SilentlyContinue
+		$files = $items | Where-Object { -not $_.PSIsContainer }
+		$Global:RemovedFiles += $items.Count
+		$Global:FreedBytes += ($files | Measure-Object -Property Length -Sum).Sum
 
-        if ($root.PSIsContainer)
-        {
-            $items = Get-ChildItem -Path "$path" -Force -Recurse -ErrorAction SilentlyContinue
-            $files = $items | Where-Object { -not $_.PSIsContainer }
-            $Global:RemovedFiles += $files.Count
-            $Global:FreedBytes += ($files | Measure-Object -Property Length -Sum).Sum
-            $allItems = @($root) + $items
-        }
-        else
-        {
-            $Global:RemovedFiles += 1
-            $Global:FreedBytes += $root.Length
-            $allItems = @($root)
-        }
-
-        foreach ($item in $allItems) {
+        foreach ($item in $items) {
             $action = $DryRun ? 'Would remove' : 'Removing'
             Write-Verbose "$action $($item.FullName)"
         }
@@ -544,8 +532,8 @@ Get-StorageSize
 $EndTime = (Get-Date)
 $mbFreed = [Math]::Round($Global:FreedBytes / 1MB, 2)
 if ($DryRun) {
-    Write-Host "DRY RUN: $($Global:RemovedFiles) files would be removed freeing $mbFreed MB"
+    Write-Host "DRY RUN: $($Global:RemovedFiles) files/dirs would be removed freeing $mbFreed MB"
 } else {
-    Write-Host "$($Global:RemovedFiles) files removed freeing $mbFreed MB"
+    Write-Host "$($Global:RemovedFiles) files/dirs removed freeing $mbFreed MB"
 }
 Write-Verbose "Elapsed Time: $( ($EndTime - $StartTime).totalseconds ) seconds"
