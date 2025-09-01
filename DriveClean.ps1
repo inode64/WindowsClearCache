@@ -226,9 +226,9 @@ Function Remove-Dir
             Write-Verbose "$action $($item.FullName)"
         }
 
-        if (-not $DryRun) {
-            Remove-Item -Path "$path" -Recurse -Force -ErrorAction SilentlyContinue
-        }
+		if (-not $DryRun) {
+			$items | Remove-Item -Force -ErrorAction SilentlyContinue
+		}
     }
 }
 
