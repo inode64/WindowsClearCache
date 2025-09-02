@@ -21,9 +21,24 @@ Function Clear-GlobalWindowsCache
     C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
 
 	Write-Output "Clearing printer cache..."
-    Stop-Service -Name "spooler"
-    Remove-Dir "C:\Windows\System32\spool\PRINTERS"
-    Start-Service -Name "spooler"
+    if (StopService "spooler")
+	{
+		Remove-Dir "C:\Windows\System32\spool\PRINTERS"
+	}
+	else
+	{
+		Write-Host "Failed to stop spooler service." -ForegroundColor Red
+	}
+    StartService "spooler"
+
+	if (CheckService "wuauserv")
+	{
+	    Stop-Windows-update
+	}
+	else
+	{
+	    Clear-Windows-update-cache
+	}
 
 	Clear-WindowsDefenderBackups
 }
@@ -103,48 +118,80 @@ Function Clear-WindowsUserCacheFiles
 #- Clear-WUS-Cache Group                                           #
 #------------------------------------------------------------------#
 
-Function CheckWUS
-{
-    $s = Get-Service wuauserv
-    if ($s.Status -eq "Running")
-    {
-        return 0
-    }
-    else
-    {
-        return 1
-    }
-}
-Function StopWUS
-{
-    Stop-Service wuauserv -Force
+function CheckService {
+	param (
+		[Parameter(Mandatory = $true)][string]$Name	
+	)
+
+	if ((Get-Service -Name "$Name").Status -ne 'Stopped')
+	{
+		return true
+	}
+	return false
 }
 
-Function StartWUS
-{
-    Start-Service wuauserv
+Function StopService {
+	param (
+		[Parameter(Mandatory = $true)][string]$Name
+	)
+
+	Stop-Service -Name "$Name" -ErrorAction SilentlyContinue
+
+	$count = 0
+
+	while ((Get-Service -Name "$Name").Status -ne 'Stopped' -and $count -gt 0)
+	{
+		Stop-Service -Name "$Name" -Force -ErrorAction SilentlyContinue
+		Write-Host "Waiting for service $Name to stop..." -ForegroundColor Yellow
+		Start-Sleep -Seconds 2
+		$count--	
+	}
+
+	return -not (CheckService "$Name")
 }
 
-Function WUSRunning
-{
-    Write-Host "Windows Update Service is Running..." -ForegroundColor Red
-    Write-Host " Stopping Windows Update Service..." -ForegroundColor Blue
+function Start-Service
+ {
+	param (
+		[Parameter(Mandatory = $true)][string]$Name
+	)
 
+	$count = 5
+
+	while ((Get-Service -Name "$Name").Status -ne 'Running' -and $count -gt 0)
+	{
+		Start-Service -Name "$Name" -Force -ErrorAction SilentlyContinue
+		Write-Host "Waiting for service $Name to start..." -ForegroundColor Yellow
+		Start-Sleep -Seconds 2
+		$count--
+	}
+}
+
+Function Stop-Windows-update
+{
     # Stopping Windows Update Service and check again if it is stopped
-    StopWUS
-    if (CheckWUS)
+    StopService "wuauserv"
+    if (CheckService "wuauserv")
     {
-        WUSStopped
+        Clear-Windows-update-cache
     }
     else
     {
         Write-Host "Can't stop Windows Update Service..." -ForegroundColor Red
         exit 1
     }
-    Write-Host "Starting Windows Update Service..." -ForegroundColor Blue
 
-    # Starting the Windows Update Service again
-    StartWUS
+	# Starting the Windows Update Service again
+    StartService "wuauserv"
+}
+
+Function Clear-Windows-update-cache
+{
+	Write-Output "Cleaning Windows Update cache..."
+
+	StopService "bits"
+    Remove-dir "$env:windir\SoftwareDistribution\Download"
+	StartService "bits"
 }
 
 Function FreeDiskSpace
@@ -154,30 +201,6 @@ Function FreeDiskSpace
     )
 
     return ([math]::Round((Get-Volume -DriveLetter $DiskLetter | Select-Object @{ Name = "MB"; Expression = { $_.SizeRemaining/1MB } }).MB, 2))
-}
-
-Function WUSStopped
-{
-    Write-Host "Windows Update Service is Stopped..." -ForegroundColor Green
-
-    # Getting free disk space before the cleaning actions
-    Write-Host " Free Disk Space before: " -ForegroundColor Blue -NoNewline
-    $Before = FreeDiskSpace
-    Write-Host "$Before MB"
-
-    Write-Host " Cleaning Files..." -ForegroundColor Blue -NoNewline
-    Remove-dir "$env:windir\SoftwareDistribution\Download"
-    Write-Host "Done..." -ForegroundColor Green
-
-    # Getting free disk space after the cleaning actions
-    Write-Host " Free Disk Space after: " -ForegroundColor Blue -NoNewline
-    $After = FreeDiskSpace
-    Write-Host "$After MB"
-
-    # Calculating the free disk space difference
-    Write-Host " Cleaned: " -ForegroundColor Blue -NoNewline
-    $Cleaned = $After - $Before
-    Write-Host "$Cleaned MB"
 }
 
 #Region HelperFunctions
@@ -532,17 +555,8 @@ if (-not $DryRun)
 	Get-StorageSize
 }
 
-if (CheckWUS)
-{
-    WUSStopped
-}
-else
-{
-    WUSRunning
-}
-
-Clear-UserCacheFiles
 Clear-GlobalWindowsCache
+Clear-UserCacheFiles
 
 Get-StorageSize
 
