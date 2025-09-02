@@ -45,10 +45,13 @@ Function Clear-WindowsDefenderBackups
 #------------------------------------------------------------------#
 Function Clear-UserCacheFiles
 {
-    # Stop-BrowserSessions
-    ForEach ($localUser in (Get-ChildItem "C:\users").Name)
+	# Use only real user directories
+    $excludedUsers = @("All Users", "Default", "Default User", "Public")
+	ForEach ($userDir in Get-ChildItem "C:\users" -Directory -Exclude $excludedUsers)
     {
-        Clear-AcrobatCacheFiles $localUser
+		$localUser = $userDir.Name
+
+		Clear-AcrobatCacheFiles $localUser
         Clear-AVGCacheFiles $localUser
         Clear-BattleNetCacheFiles $localUser
         Clear-ChromeCacheFiles $localUser
