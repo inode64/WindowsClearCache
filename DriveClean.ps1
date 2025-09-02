@@ -12,18 +12,20 @@ $Global:FreedBytes = 0
 Function Clear-GlobalWindowsCache
 {
 	Write-Output "Clearing global Windows cache..."
-    Remove-Dir "C:\Windows\Temp"
-    Remove-Dir "C:\Temp"
-    Remove-Dir "C:\tmp"
-    #Remove-Dir "C:\`$Recycle.Bin"
-    Remove-Dir "C:\Windows\Prefetch"
-    C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 255
-    C:\Windows\System32\rundll32.exe InetCpl.cpl, ClearMyTracksByProcess 4351
+    Remove-Dir "$env:windir\Temp"
+    Remove-Dir "$env:SystemDrive:\Temp"
+    Remove-Dir "$env:SystemDrive:\tmp"
+
+	Write-Output "Clearing recycle bin..."
+	Clear-RecycleBin -Force -ErrorAction Ignore
+
+	Write-Output "Clearing prefetch cache..."
+    Remove-Dir "$env:windir\Prefetch"
 
 	Write-Output "Clearing printer cache..."
     if (StopService "spooler")
 	{
-		Remove-Dir "C:\Windows\System32\spool\PRINTERS"
+		Remove-Dir "$env:windir\System32\spool\PRINTERS"
 	}
 	else
 	{
@@ -50,10 +52,10 @@ Function Clear-WindowsDefenderBackups
 {
 	Write-Output "Clearing Windows Defender backups"
 
-	Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\History"
-	Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\mpcache*"
-    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\Backup"
-    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\NisBackup"
+	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Scans\History"
+	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Scans\mpcache*"
+    Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Definition Updates\Backup"
+    Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Definition Updates\NisBackup"
 }
 
 #------------------------------------------------------------------#
