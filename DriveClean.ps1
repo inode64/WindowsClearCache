@@ -88,6 +88,7 @@ Function Clear-UserCacheFiles
         Clear-TeamsCacheFiles $localUser
         Clear-ThunderbirdCacheFiles $localUser
         Clear-WindowsUserCacheFiles $localUser
+		Clear-AppxPackageCacheFiles $localUser
     }
 }
 
@@ -559,6 +560,30 @@ Function Clear-LibreOfficeCacheFiles
         }
     }
 }
+
+#------------------------------------------------------------------#
+#- Clear-AppxPackageCacheFiles                                     #
+#------------------------------------------------------------------#
+Function Clear-AppxPackageCacheFiles
+{
+    param([string]$user = $env:USERNAME)
+
+	Write-Output "Clearing Appx package cache"
+
+    $DirName = "C:\users\$user\AppData\Local\Packages"
+    if ((Test-Path "$DirName"))
+    {
+        $possibleCachePaths = @("AC", "TempState", "LocalCache", "LocalState\\Cache")
+        ForEach ($Package in Get-ChildItem "$DirName" -Directory)
+        {
+            ForEach ($cachePath in $possibleCachePaths)
+            {
+                Remove-Dir "$($Package.FullName)\$cachePath"
+            }
+        }
+    }
+}
+
 
 #Endregion MiscApplications
 
