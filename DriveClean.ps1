@@ -84,6 +84,7 @@ Function Clear-UserCacheFiles
         Clear-ChromeCacheFiles $localUser
         Clear-DiscordCacheFiles $localUser
         Clear-EdgeCacheFiles $localUser
+        Clear-OperaCacheFiles $localUser
         Clear-EpicGamesCacheFiles $localUser
         Clear-FirefoxCacheFiles $localUser
         Clear-GoogleEarth $localUser
@@ -91,6 +92,7 @@ Function Clear-UserCacheFiles
         Clear-LibreOfficeCacheFiles $localUser
         Clear-LolScreenSaverCacheFiles $localUser
         Clear-MicrosoftOfficeCacheFiles $localUser
+        Clear-OneDriveCacheFiles $localUser
         Clear-SlackCacheFiles $localUser
         Clear-SteamCacheFiles $localUser
         Clear-TeamsCacheFiles $localUser
@@ -350,6 +352,16 @@ Function Clear-EdgeCacheFiles
     Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default\CacheStorage"
 }
 
+#------------------------------------------------------------------#
+#- Clear-OperaCacheFiles                                           #
+#------------------------------------------------------------------#
+Function Clear-OperaCacheFiles
+{
+    param([string]$user = $env:USERNAME)
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Opera Software\Opera Stable" "Browser Opera"
+    Clear-ChromeTemplate "C:\users\$user\AppData\Local\Opera Software\Opera GX Stable" "Browser Opera GX"
+}
+
 #Endregion ChromiumBrowsers
 
 #Region FirefoxBrowsers
@@ -544,6 +556,25 @@ Function Clear-MicrosoftOfficeCacheFiles
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word"
+    }
+}
+
+#------------------------------------------------------------------#
+#- Clear-OneDriveCacheFiles                                        #
+#------------------------------------------------------------------#
+Function Clear-OneDriveCacheFiles
+{
+    param([string]$user = $env:USERNAME)
+    if (Test-Path "C:\users\$user\AppData\Local\Microsoft\OneDrive")
+    {
+        Write-Output "Clearing OneDrive cache"
+
+        $oneDriveAppDataPath = "C:\users\$user\AppData\Local\Microsoft\OneDrive"
+        $possibleCachePaths = @("logs", "cache", "tmp")
+        ForEach ($cachePath in $possibleCachePaths)
+        {
+            Remove-Dir "$oneDriveAppDataPath\$cachePath"
+        }
     }
 }
 
