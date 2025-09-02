@@ -84,20 +84,21 @@ Function Clear-UserCacheFiles
         Clear-ChromeCacheFiles $localUser
         Clear-DiscordCacheFiles $localUser
         Clear-EdgeCacheFiles $localUser
-        Clear-OperaCacheFiles $localUser
         Clear-EpicGamesCacheFiles $localUser
         Clear-FirefoxCacheFiles $localUser
         Clear-GoogleEarth $localUser
-        Clear-iTunesCacheFiles $localUser
         Clear-LibreOfficeCacheFiles $localUser
         Clear-LolScreenSaverCacheFiles $localUser
         Clear-MicrosoftOfficeCacheFiles $localUser
         Clear-OneDriveCacheFiles $localUser
+        Clear-OperaCacheFiles $localUser
         Clear-SlackCacheFiles $localUser
         Clear-SteamCacheFiles $localUser
         Clear-TeamsCacheFiles $localUser
         Clear-ThunderbirdCacheFiles $localUser
         Clear-WindowsUserCacheFiles $localUser
+        Clear-iTunesCacheFiles $localUser
+
 		Clear-AppxPackageCacheFiles $localUser
     }
 }
@@ -122,8 +123,8 @@ Function Clear-WindowsUserCacheFiles
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\IEDownloadHistory"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\INetCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files"
-    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WebCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WER"
+    Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Windows\WebCache"
     Remove-Dir "C:\Users\$user\AppData\Local\Temp"
 }
 
@@ -551,10 +552,10 @@ Function Clear-MicrosoftOfficeCacheFiles
     {
         Write-Output "Clearing Outlook cache"
 
-        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost"
-        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO"
+        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word"
     }
 }
