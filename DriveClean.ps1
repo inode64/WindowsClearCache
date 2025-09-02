@@ -32,9 +32,18 @@ Function Clear-GlobalWindowsCache
 #------------------------------------------------------------------#
 Function Clear-WindowsDefenderBackups
 {
-    Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\History\Backup"
+	Write-Output "Clearing Windows Defender backups..."
+
+	Stop-Service -Name "WinDefend" -Force -ErrorAction SilentlyContinue
+	Stop-Service -Name "WdNisSvc" -Force -ErrorAction SilentlyContinue
+
+	Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\History\Backup"
     Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\Backup"
     Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Definition Updates\NisBackup"
+
+	Start-Service -Name "WinDefend" -ErrorAction SilentlyContinue
+	Start-Service -Name "WdNisSvc" -ErrorAction SilentlyContinue
+
 }
 
 #------------------------------------------------------------------#
