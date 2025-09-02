@@ -22,6 +22,14 @@ Function Clear-GlobalWindowsCache
 	Write-Output "Clearing prefetch cache..."
     Remove-Dir "$env:windir\Prefetch"
 
+	Write-Output "Clearing Windows dump files..."
+    Remove-Dir "$env:windir\Minidump"
+    Remove-Dir "$env:windir\MEMORY.DMP"
+    Remove-Dir "$env:windir\LiveKernelReports"
+
+	Write-Output "Clearing Windows Error Reporting temp files..."
+    Remove-Dir "$env:ProgramData\Microsoft\Windows\WER\Temp"
+
 	Write-Output "Clearing printer cache..."
     if (StopService "spooler")
 	{
