@@ -123,11 +123,16 @@ function CheckService {
 		[Parameter(Mandatory = $true)][string]$Name	
 	)
 
+	if ($DryRun)
+	{
+		return $true
+	}
+
 	if ((Get-Service -Name "$Name").Status -ne 'Stopped')
 	{
-		return true
+		return $true
 	}
-	return false
+	return $false
 }
 
 Function StopService {
@@ -135,6 +140,10 @@ Function StopService {
 		[Parameter(Mandatory = $true)][string]$Name
 	)
 
+	if ($DryRun)
+	{
+		return $true
+	}
 	Stop-Service -Name "$Name" -ErrorAction SilentlyContinue
 
 	$count = 0
@@ -156,6 +165,11 @@ function Start-Service
 		[Parameter(Mandatory = $true)][string]$Name
 	)
 
+	if ($DryRun)
+	{
+		return $true
+	}
+
 	$count = 5
 
 	while ((Get-Service -Name "$Name").Status -ne 'Running' -and $count -gt 0)
@@ -165,6 +179,8 @@ function Start-Service
 		Start-Sleep -Seconds 2
 		$count--
 	}
+
+	return CheckService "$Name"
 }
 
 Function Stop-Windows-update
