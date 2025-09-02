@@ -24,7 +24,8 @@ Function Clear-GlobalWindowsCache
     Stop-Service -Name "spooler"
     Remove-Dir "C:\Windows\System32\spool\PRINTERS"
     Start-Service -Name "spooler"
-    Clear-WindowsDefenderBackups
+
+	Clear-WindowsDefenderBackups
 }
 
 #------------------------------------------------------------------#
@@ -32,7 +33,7 @@ Function Clear-GlobalWindowsCache
 #------------------------------------------------------------------#
 Function Clear-WindowsDefenderBackups
 {
-	Write-Output "Clearing Windows Defender backups..."
+	Write-Output "Clearing Windows Defender backups"
 
 	Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\History"
 	Remove-Dir "C:\ProgramData\Microsoft\Windows Defender\Scans\mpcache*"
@@ -50,6 +51,7 @@ Function Clear-UserCacheFiles
 	ForEach ($userDir in Get-ChildItem "C:\users" -Directory -Exclude $excludedUsers)
     {
 		$localUser = $userDir.Name
+		Write-Output "* Clearing cache for user $localUser" -ForegroundColor Green
 
 		Clear-AcrobatCacheFiles $localUser
         Clear-AVGCacheFiles $localUser
@@ -78,6 +80,9 @@ Function Clear-UserCacheFiles
 Function Clear-WindowsUserCacheFiles
 {
     param([string]$user = $env:USERNAME)
+
+	Write-Output "Clearing Windows user cache"
+
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Cache"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Recovery"
     Remove-Dir "C:\Users\$user\AppData\Local\Microsoft\Internet Explorer\Tiles"
@@ -178,24 +183,6 @@ Function WUSStopped
 #Region HelperFunctions
 
 #------------------------------------------------------------------#
-#- Stop-BrowserSessions                                            #
-#------------------------------------------------------------------#
-Function Stop-BrowserSessions
-{
-    $activeBrowsers = Get-Process Firefox*, Chrome*, Waterfox*, Edge*
-    ForEach ($browserProcess in $activeBrowsers)
-    {
-        try
-        {
-            $browserProcess.CloseMainWindow() | Out-Null
-        }
-        catch
-        {
-        }
-    }
-}
-
-#------------------------------------------------------------------#
 #- Get-StorageSize                                                 #
 #------------------------------------------------------------------#
 Function Get-StorageSize
@@ -260,7 +247,8 @@ Function Clear-ChromeTemplate
     if (Test-Path "$path")
     {
         Write-Output "Clear cache $name"
-        $possibleCachePaths = @("Cache", "Cache2\entries", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
+
+		$possibleCachePaths = @("Cache", "Cache2\entries", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
         ForEach ($cachePath in $possibleCachePaths)
         {
             Remove-Dir "$path\$cachePath"
@@ -281,7 +269,8 @@ Function Clear-MozillaTemplate
     if (Test-Path "$path")
     {
         Write-Output "Clear cache $name"
-        $AppDataPath = (Get-ChildItem "$path" | Where-Object { $_.Name -match "Default" }[0]).FullName
+
+		$AppDataPath = (Get-ChildItem "$path" | Where-Object { $_.Name -match "Default" }[0]).FullName
         $possibleCachePaths = @("cache", "cache2\entries", "thumbnails", "webappsstore.sqlite", "chromeappstore.sqlite")
         ForEach ($cachePath in $possibleCachePaths)
         {
@@ -347,6 +336,8 @@ Function Clear-TeamsCacheFiles
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\Roaming\Microsoft\Teams")
     {
+		Write-Output "Clearing Teams cache"
+		
         $possibleCachePaths = @("application cache\cache", "blob_storage", "Cache", "Code Cache", "GPUCache", "logs", "tmp", "Service Worker\CacheStorage", "Service Worker\ScriptCache")
         $teamsAppDataPath = "C:\users\$user\AppData\Roaming\Microsoft\Teams"
         ForEach ($cachePath in $possibleCachePaths)
@@ -433,26 +424,30 @@ Function Clear-AVGCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear Google Earth                                              #
+#- Clear-Google Earth                                              #
 #------------------------------------------------------------------#
 Function Clear-GoogleEarth
 {
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\LocalLow\Google\GoogleEarth")
     {
+        Write-Output "Clearing Google Earth cache"
+
         Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\unified_cache_leveldb_leveldb2"
         Remove-Dir "C:\users\$user\AppData\LocalLow\Google\GoogleEarth\webdata"
     }
 }
 
 #------------------------------------------------------------------#
-#- CleariTunesCacheFiles                                           #
+#- Clear-TunesCacheFiles                                           #
 #------------------------------------------------------------------#
 Function Clear-iTunesCacheFiles
 {
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\Local\Apple Computer\iTunes")
     {
+		Write-Output "Clearing iTunes cache"
+
         $iTunesAppDataPath = "C:\users\$user\AppData\Local\Apple Computer\iTunes"
         $possibleCachePaths = @("SubscriptionPlayCache")
         ForEach ($cachePath in $possibleCachePaths)
@@ -471,6 +466,8 @@ Function Clear-AcrobatCacheFiles
     $DirName = "C:\users\$user\AppData\LocalLow\Adobe\Acrobat"
     if (Test-Path "$DirName")
     {
+		Write-Output "Clearing Acrobat cache"
+
         $possibleCachePaths = @("Cache", "ConnectorIcons")
         ForEach ($AcrobatAppDataPath in (Get-ChildItem "$DirName").Name)
         {
@@ -490,6 +487,8 @@ Function Clear-MicrosoftOfficeCacheFiles
     param([string]$user = $env:USERNAME)
     if (Test-Path "C:\users\$user\AppData\Local\Microsoft\Outlook")
     {
+        Write-Output "Clearing Outlook cache"
+
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
@@ -507,7 +506,9 @@ Function Clear-LibreOfficeCacheFiles
     $DirName = "C:\users\$user\AppData\Roaming\LibreOffice"
     if (Test-Path "$DirName")
     {
-        $possibleCachePaths = @("cache", "crash", "user\backup", "user\temp")
+		Write-Output "Clearing LibreOffice cache"
+
+		$possibleCachePaths = @("cache", "crash", "user\backup", "user\temp")
         ForEach ($LibreOfficeAppDataPath in (Get-ChildItem "$DirName").Name)
         {
             ForEach ($cachePath in $possibleCachePaths)
@@ -526,7 +527,10 @@ Function Clear-LibreOfficeCacheFiles
 
 $StartTime = (Get-Date)
 
-Get-StorageSize
+if (-not $DryRun)
+{
+	Get-StorageSize
+}
 
 if (CheckWUS)
 {
