@@ -312,7 +312,7 @@ Function Clear-MozillaTemplate
         Write-Output "Clear cache $name"
 
 		$AppDataPath = (Get-ChildItem "$path" | Where-Object { $_.Name -match "Default" }[0]).FullName
-        $possibleCachePaths = @("cache", "cache2\entries", "thumbnails", "webappsstore.sqlite", "chromeappstore.sqlite")
+        $possibleCachePaths = @("cache", "cache2\entries", "thumbnails", "webappsstore.sqlite*", "chromeappstore.sqlite")
         ForEach ($cachePath in $possibleCachePaths)
         {
             Remove-Dir "$AppDataPath\$cachePath"
