@@ -235,6 +235,7 @@ Function Clear-Windows-update-cache
 
 	StopService "bits"
     Remove-dir "$env:windir\SoftwareDistribution"
+	Remove-dir "$env:windir\Logs\WindowsUpdate"
 	StartService "bits"
 }
 
