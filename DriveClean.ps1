@@ -203,7 +203,7 @@ function StartService
 
 	while ((Get-Service -Name "$Name").Status -ne 'Running' -and $count -gt 0)
 	{
-		Start-Service -Name "$Name" -Force -ErrorAction SilentlyContinue
+		Start-Service -Name "$Name" -ErrorAction SilentlyContinue
 		Write-Host "Waiting for service $Name to start..." -ForegroundColor Yellow
 		Start-Sleep -Seconds 2
 		$count--
