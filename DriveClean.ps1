@@ -50,6 +50,17 @@ Function Clear-GlobalWindowsCache
 	    Clear-Windows-update-cache
 	}
 
+
+	if (-not $DryRun)
+	{
+		Write-Output "Running Disk Cleanup..."
+		Start-Process cleanmgr.exe -ArgumentList '/sageset:1' -NoNewWindow -Wait
+		Start-Process cleanmgr.exe -ArgumentList '/sagerun:1' -NoNewWindow -Wait
+
+		Write-Output "Running DISM cleanup..."
+		Start-Process dism.exe -ArgumentList '/Online /Cleanup-Image /StartComponentCleanup /Quiet /NoRestart' -NoNewWindow -Wait
+	}
+
 	Clear-WindowsDefenderBackups
 }
 
@@ -60,8 +71,11 @@ Function Clear-WindowsDefenderBackups
 {
 	Write-Output "Clearing Windows Defender backups"
 
+	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\MetaStore"
+	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Network Inspection System\Support"
 	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Scans\History"
 	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Scans\mpcache*"
+	Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Support"
     Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Definition Updates\Backup"
     Remove-Dir "$env:ProgramData\Microsoft\Windows Defender\Definition Updates\NisBackup"
 }
@@ -220,7 +234,7 @@ Function Clear-Windows-update-cache
 	Write-Output "Cleaning Windows Update cache..."
 
 	StopService "bits"
-    Remove-dir "$env:windir\SoftwareDistribution\Download"
+    Remove-dir "$env:windir\SoftwareDistribution"
 	StartService "bits"
 }
 
