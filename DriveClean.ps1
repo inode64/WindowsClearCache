@@ -365,6 +365,7 @@ Function Clear-EdgeCacheFiles
 {
     param([string]$user = $env:USERNAME)
     Clear-ChromeTemplate "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default" "Browser Microsoft Edge"
+	Clear-ChromeTemplate "C:\users\$user\AppData\Local\Microsoft\Edge SxS\User Data\Default" "Browser Microsoft Edge SxS"
     Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Edge\User Data\Default\CacheStorage"
 }
 
