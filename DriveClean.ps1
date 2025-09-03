@@ -301,7 +301,7 @@ Function Clear-ChromeTemplate
     {
         Write-Output "Clear cache $name"
 
-		$possibleCachePaths = @("Cache", "Cache2\entries", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "Service Worker", "Top Sites", "VisitedLinks", "Web Data")
+		$possibleCachePaths = @("Cache", "Cache2\entries", "ChromeDWriteFontCache", "Code Cache", "GPUCache", "JumpListIcons", "JumpListIconsOld", "Media Cache", "ShaderCache", "Service Worker", "storage\ext", "Top Sites", "VisitedLinks", "Web Data")
         ForEach ($cachePath in $possibleCachePaths)
         {
             Remove-Dir "$path\$cachePath"
