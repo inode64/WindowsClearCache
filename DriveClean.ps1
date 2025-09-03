@@ -214,7 +214,7 @@ Function Stop-Windows-update
 {
     # Stopping Windows Update Service and check again if it is stopped
     StopService "wuauserv" | Out-Null
-    if (CheckService "wuauserv")
+    if (-not (CheckService "wuauserv"))
     {
         Clear-Windows-update-cache
     }
