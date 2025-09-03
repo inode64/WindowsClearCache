@@ -91,7 +91,7 @@ Function Clear-UserCacheFiles
 	ForEach ($userDir in Get-ChildItem "C:\users" -Directory -Exclude $excludedUsers)
     {
 		$localUser = $userDir.Name
-		Write-Output "* Clearing cache for user $localUser" -ForegroundColor Green
+		Write-Host "* Clearing cache for user $localUser" -ForegroundColor Green
 
 		Clear-AcrobatCacheFiles $localUser
         Clear-AVGCacheFiles $localUser
@@ -157,11 +157,11 @@ function CheckService {
 		return $true
 	}
 
-	if ((Get-Service -Name "$Name").Status -ne 'Stopped')
-	{
-		return $true
-	}
-	return $false
+	try {
+        return ((Get-Service -Name $Name -ErrorAction Stop).Status -ne 'Stopped')
+    } catch {
+        return $false  # servicio no existe o error al consultarlo
+    }
 }
 
 Function StopService {
@@ -209,7 +209,7 @@ function StartService
 		$count--
 	}
 
-	return CheckService "$Name"
+	return (CheckService "$Name")
 }
 
 Function Stop-Windows-update
