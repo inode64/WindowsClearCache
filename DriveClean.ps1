@@ -54,6 +54,7 @@ Function Clear-GlobalWindowsCache
 	if (-not $DryRun)
 	{
 		Write-Output "Running Disk Cleanup..."
+		Start-Process cleanmgr.exe -ArgumentList '/verylowdisk' -NoNewWindow -Wait
 		Start-Process cleanmgr.exe -ArgumentList '/sageset:1' -NoNewWindow -Wait
 		Start-Process cleanmgr.exe -ArgumentList '/sagerun:1' -NoNewWindow -Wait
 
