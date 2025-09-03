@@ -39,7 +39,7 @@ Function Clear-GlobalWindowsCache
 	{
 		Write-Host "Failed to stop spooler service." -ForegroundColor Red
 	}
-    StartService "spooler"
+    StartService "spooler" | Out-Null
 
 	if (CheckService "wuauserv")
 	{
@@ -215,7 +215,7 @@ function StartService
 Function Stop-Windows-update
 {
     # Stopping Windows Update Service and check again if it is stopped
-    StopService "wuauserv"
+    StopService "wuauserv" | Out-Null
     if (CheckService "wuauserv")
     {
         Clear-Windows-update-cache
@@ -227,17 +227,17 @@ Function Stop-Windows-update
     }
 
 	# Starting the Windows Update Service again
-    StartService "wuauserv"
+    StartService "wuauserv" | Out-Null
 }
 
 Function Clear-Windows-update-cache
 {
 	Write-Output "Cleaning Windows Update cache..."
 
-	StopService "bits"
+	StopService "bits" | Out-Null
     Remove-dir "$env:windir\SoftwareDistribution"
 	Remove-dir "$env:windir\Logs\WindowsUpdate"
-	StartService "bits"
+	StartService "bits" | Out-Null
 }
 
 Function FreeDiskSpace
