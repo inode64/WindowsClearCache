@@ -188,7 +188,7 @@ Function StopService {
 	return -not (CheckService "$Name")
 }
 
-function Start-Service
+function StartService
  {
 	param (
 		[Parameter(Mandatory = $true)][string]$Name
