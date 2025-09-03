@@ -173,7 +173,7 @@ Function StopService {
 	}
 	Stop-Service -Name "$Name" -ErrorAction SilentlyContinue
 
-	$count = 0
+	$count = 5
 
 	while ((Get-Service -Name "$Name").Status -ne 'Stopped' -and $count -gt 0)
 	{
