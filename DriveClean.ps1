@@ -92,6 +92,7 @@ Function Clear-UserCacheFiles
 		Write-Host "* Clearing cache for user $localUser" -ForegroundColor Green
 
 		Clear-AcrobatCacheFiles $localUser
+		Clear-WoltersKluwer $localUser
         Clear-AVGCacheFiles $localUser
         Clear-BattleNetCacheFiles $localUser
         Clear-ChromeCacheFiles $localUser
@@ -463,6 +464,19 @@ Function Clear-BattleNetCacheFiles
 {
     param([string]$user = $env:USERNAME)
     Clear-ChromeTemplate "C:\users\$user\AppData\Local\Battle.net\BrowserCache" "BattleNet"
+}
+
+#------------------------------------------------------------------#
+#- Clear-WindowsDefenderBackups                                    #
+#------------------------------------------------------------------#
+Function Clear-WoltersKluwer
+{
+    param([string]$user = $env:USERNAME)
+
+	Write-Output "Clearing Wolters Kluwer cache"
+
+	# Fix https://a3responde.wolterskluwer.com/es/s/article/pantalla-de-logado-en-blanco
+	Remove-Dir "C:\users\$user\AppData\Local\Wke.ArqWin.CefSharpWrapper\Cache"
 }
 
 #------------------------------------------------------------------#
