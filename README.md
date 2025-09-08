@@ -1,25 +1,29 @@
 # WindowsClearCache
 
-Simple scripts to clear temp files, browser cache/history, caches for applications like Microsoft Teams, Slack, Discord, Opera, and OneDrive, and remove Windows Defender scan and definition update backups (including the NisBackup folder), Windows dump files, and Windows Error Reporting (WER) temp files
+Simple scripts to clear temp files, browser cache/history, caches for applications like Microsoft Teams, Slack, Discord, Opera,
+and OneDrive, and remove Windows Defender scan and definition update backups (including the NisBackup folder), Windows dump files, and Windows Error Reporting (WER) temp files
+
+## Installation
+
+1) Build the graphical installer by running `makensis WindowsClearCache.nsi` (or download a pre-built `WindowsClearCacheInstaller.exe`).
+2) Run `WindowsClearCacheInstaller.exe` as an administrator.
+   - The installer launches `cleanmgr.exe /sageset:1` so you can configure Disk Cleanup before the first run.
+   - You can choose to create a weekly scheduled task that runs the cleanup with highest privileges.
+   - The cleaner script is copied to `c:\Program Files\WindowsClearCache`.
 
 ## How To Run
 
-To run this with parameters, do the following:
-
-1) Download the .zip file on the main page of the GitHub and extract the .zip file to your desired location, e.g. - `c:\WindowsClearCache`
-2) Once extracted, open [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting) (or [PowerShell ISE](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/introducing-the-windows-powershell-ise)) as an Administrator
-3) Enable PowerShell execution: `Set-ExecutionPolicy Unrestricted -Force` (to allow executing unsigned code)
-4) Run the Disk Cleanup utility (cleanmgr.exe) with the /sageset:1 option, which allows users to configure cleanup settings before executing the actual cleanup process 
-e.g. - `cleanmgr.exe /sageset:1`
-5) On the prompt, change to the directory where you extracted the files:
-e.g. - `cd c:\Program Files\WindowsClearCache`
-6) Next, to run the script, enter in the following:
-e.g. - `.\DriveClean.ps1`
+After installation you can run the cleaner manually with:
+`powershell.exe -ExecutionPolicy Bypass -File "%ProgramFiles%\WindowsClearCache\DriveClean.ps1"`
 
 Optional flags:
 
 - Use `-DryRun` to preview the files that would be deleted without removing them.
 - Use `-Verbose` to display each file as it is deleted (or would be deleted in dry run).
+
+## Uninstallation
+
+Run `Uninstall.exe` from `c:\Program Files\WindowsClearCache` or use Add/Remove Programs. This removes the scheduled task and deletes the installed files.
 
 ## Tested on following Windows Versions
 

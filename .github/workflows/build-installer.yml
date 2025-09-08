@@ -1,0 +1,22 @@
+name: Build Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install NSIS
+        run: choco install nsis -y
+      - name: Build installer
+        run: makensis WindowsClearCache.nsi
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WindowsClearCacheInstaller
+          path: WindowsClearCacheInstaller.exe
