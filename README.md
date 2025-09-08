@@ -21,6 +21,10 @@ Optional flags:
 - Use `-DryRun` to preview the files that would be deleted without removing them.
 - Use `-Verbose` to display each file as it is deleted (or would be deleted in dry run).
 
+## Uninstallation
+
+Run `Uninstall.exe` from `c:\Program Files\WindowsClearCache` or use Add/Remove Programs. This removes the scheduled task and deletes the installed files.
+
 ## Tested on following Windows Versions
 
 Verified on the following platforms:
