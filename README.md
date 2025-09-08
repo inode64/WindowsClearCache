@@ -6,6 +6,7 @@ and OneDrive, and remove Windows Defender scan and definition update backups (in
 ## Installation
 
 1) Build the graphical installer by running `makensis WindowsClearCache.nsi` (or download a pre-built `WindowsClearCacheInstaller.exe`).
+   - A GitHub Actions workflow builds the installer and attaches it to a release when you push a tag such as `v1.0.0`.
 2) Run `WindowsClearCacheInstaller.exe` as an administrator.
    - The installer launches `cleanmgr.exe /sageset:1` so you can configure Disk Cleanup before the first run.
    - You can choose to create a weekly scheduled task that runs the cleanup with highest privileges.

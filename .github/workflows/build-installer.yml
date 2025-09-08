@@ -2,10 +2,10 @@
 name: Build Installer
 
 "on":
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -17,9 +17,22 @@ jobs:
       - name: Build installer
         shell: pwsh
         run: |
-          & "C:\Program Files (x86)\NSIS\makensis.exe" WindowsClearCache.nsi
+          & "C:\\Program Files (x86)\\NSIS\\makensis.exe" WindowsClearCache.nsi
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: WindowsClearCacheInstaller
           path: WindowsClearCacheInstaller.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: WindowsClearCacheInstaller
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: WindowsClearCacheInstaller.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
