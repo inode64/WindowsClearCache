@@ -14,7 +14,7 @@ and OneDrive, and remove Windows Defender scan and definition update backups (in
 ## How To Run
 
 After installation you can run the cleaner manually with:
-`c:\Program Files\WindowsClearCache\DriveClean.ps1`
+`powershell.exe -ExecutionPolicy Bypass -File "%ProgramFiles%\WindowsClearCache\DriveClean.ps1"`
 
 Optional flags:
 
