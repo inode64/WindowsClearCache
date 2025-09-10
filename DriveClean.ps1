@@ -1,12 +1,18 @@
 [CmdletBinding()]
 param(
-    [switch]$DryRun,
+	[bool]$CleanSystem = $true,
+    [bool]$CleanUsers = $true,
+	[string[]]$ExcludeUsers,
 	[string[]]$IncludeUsers,
-	[string[]]$ExcludeUsers
+    [switch]$DryRun
 )
 
 if ($IncludeUsers -and $ExcludeUsers) {
     throw "IncludeUsers and ExcludeUsers parameters cannot be used together."
+}
+
+if (-not $CleanSystem -and -not $CleanUsers) {
+    throw "CleanSystem and CleanUsers parameters cannot both be false."
 }
 
 $Global:RemovedFiles = 0
@@ -682,8 +688,13 @@ if (-not $DryRun)
 	Get-StorageSize
 }
 
-Clear-GlobalWindowsCache
-Clear-UserCacheFiles
+if ($CleanSystem) {
+	Clear-GlobalWindowsCache
+}
+
+if ($CleanUsers) {
+	Clear-UserCacheFiles
+}
 
 Get-StorageSize
 

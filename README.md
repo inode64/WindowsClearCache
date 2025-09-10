@@ -24,6 +24,9 @@ Optional flags:
 - Use `-IncludeUsers` to target specific active user profiles.
 - Use `-ExcludeUsers` to skip particular user profiles.
   - `-IncludeUsers` and `-ExcludeUsers` are mutually exclusive.
+- Use `-CleanSystem:$false` to skip clearing system caches.
+- Use `-CleanUsers:$false` to skip clearing user profile caches.
+  - `CleanSystem` and `CleanUsers` cannot both be set to `$false`.
 
 ## Uninstallation
 
