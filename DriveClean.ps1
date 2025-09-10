@@ -62,14 +62,21 @@ Function Clear-GlobalWindowsCache
 	    Clear-Windows-update-cache
 	}
 
-
 	if (-not $DryRun)
 	{
-		Write-Output "Running Disk Cleanup..."
-		Start-Process cleanmgr.exe -ArgumentList '/sagerun:1' -NoNewWindow -Wait
+		# Check if cleanmgr.exe is available (it may not be in some Windows versions)
+		if (Test-Path "$env:windir\System32\cleanmgr.exe")
+		{
+			Write-Output "Running Disk Cleanup..."
+			Start-Process cleanmgr.exe -ArgumentList '/sagerun:1' -NoNewWindow -Wait
+		}
 
-		Write-Output "Running DISM cleanup..."
-		Start-Process dism.exe -ArgumentList '/Online /Cleanup-Image /StartComponentCleanup /Quiet /NoRestart' -NoNewWindow -Wait
+		# Check if dism.exe is available (it may not be in some Windows versions)
+		if (Test-Path "$env:windir\System32\dism.exe")
+		{
+			Write-Output "Running DISM cleanup..."
+			Start-Process dism.exe -ArgumentList '/Online /Cleanup-Image /StartComponentCleanup /Quiet /NoRestart' -NoNewWindow -Wait
+		}
 	}
 
 	Clear-WindowsDefenderBackups

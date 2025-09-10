@@ -38,24 +38,32 @@ Verified on the following platforms:
 
 |Windows Version         |Yes/No?|
 |:-----------------------|:-----:|
-| Windows Server 2025    | ???   |
+| Windows Server 2025    | Yes   |
 | Windows Server 2022    | Yes   |
 | Windows Server 2019    | Yes   |
 | Windows Server 2016    | Yes   |
 | Windows Server 2012 R2 | Yes   |
 | Windows Server 2012    | Yes   |
 | Windows Server 2008 R2 | Yes   |
-| Windows Server 2008    | Yes   |
+| Windows Server 2008 SP2| Yes   |
+| Windows Server 2008    | No    |
 | Windows Server 2003    | No    |
 | Windows 11             | Yes   |
 | Windows 10             | Yes   |
-| Windows 8              | ???   |
-| Windows 7              | ???   |
+| Windows 8              | Yes   |
+| Windows 7 SP1          | Yes   |
+| Windows 7              | No    |
 | Windows Vista          | No    |
 | Windows XP             | No    |
 | Windows 2000           | No    |
 
 It is likely to work on other platforms as well. If you try it and find that it works on another platform, please let me know.
+
+### Requirements and Limitations
+
+- Requires PowerShell 5 or later and administrative privileges.
+- Disk Cleanup (`cleanmgr.exe`) and DISM may be installed. These tools are present when the Desktop Experience feature is enabled and are not available on Server Core installations, which are required for native Windows optimizations.
+- The Windows Update service should be available to allow cache cleanup.
 
 ## Disclaimer
 
