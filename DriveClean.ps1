@@ -159,7 +159,7 @@ function CheckService {
 	try {
         return ((Get-Service -Name $Name -ErrorAction Stop).Status -ne 'Stopped')
     } catch {
-        return $false  # servicio no existe o error al consultarlo
+        return $false
     }
 }
 
