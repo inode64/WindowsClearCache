@@ -21,6 +21,9 @@ Optional flags:
 
 - Use `-DryRun` to preview the files that would be deleted without removing them.
 - Use `-Verbose` to display each file as it is deleted (or would be deleted in dry run).
+- Use `-IncludeUsers` to target specific active user profiles.
+- Use `-ExcludeUsers` to skip particular user profiles.
+  - `-IncludeUsers` and `-ExcludeUsers` are mutually exclusive.
 
 ## Uninstallation
 

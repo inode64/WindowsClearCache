@@ -1,7 +1,13 @@
 [CmdletBinding()]
 param(
-    [switch]$DryRun
+    [switch]$DryRun,
+	[string[]]$IncludeUsers,
+	[string[]]$ExcludeUsers
 )
+
+if ($IncludeUsers -and $ExcludeUsers) {
+    throw "IncludeUsers and ExcludeUsers parameters cannot be used together."
+}
 
 $Global:RemovedFiles = 0
 $Global:FreedBytes = 0
@@ -86,7 +92,16 @@ Function Clear-UserCacheFiles
 {
 	# Use only real user directories
     $excludedUsers = @("All Users", "Default", "Default User", "Public")
-	ForEach ($userDir in Get-ChildItem "C:\users" -Directory -Exclude $excludedUsers)
+	if ($IncludeUsers) {
+    	$activeUsers = Get-CimInstance -Class Win32_UserAccount -Filter "LocalAccount='True' AND Disabled='False'" | Select-Object -ExpandProperty Name
+	    $userDirs = Get-ChildItem "C:\users" -Directory | Where-Object { $IncludeUsers -contains $_.Name -and $activeUsers -contains $_.Name }
+	} else {
+    	if ($ExcludeUsers) {
+    	    $excludedUsers += $ExcludeUsers
+    	}
+    	$userDirs = Get-ChildItem "C:\users" -Directory -Exclude $excludedUsers
+	}
+	ForEach ($userDir in $userDirs)
     {
 		$localUser = $userDir.Name
 		Write-Host "* Clearing cache for user $localUser" -ForegroundColor Green
