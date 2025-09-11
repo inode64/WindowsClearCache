@@ -670,7 +670,7 @@ Function Clear-AppxPackageCacheFiles
     $DirName = "C:\users\$user\AppData\Local\Packages"
     if ((Test-Path "$DirName"))
     {
-        $possibleCachePaths = @("AC", "TempState", "LocalCache", "LocalState\\Cache")
+        $possibleCachePaths = @("AC", "TempState", "LocalState\\Cache")
         ForEach ($Package in Get-ChildItem "$DirName" -Directory)
         {
             ForEach ($cachePath in $possibleCachePaths)
