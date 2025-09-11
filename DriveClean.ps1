@@ -617,6 +617,14 @@ Function Clear-MicrosoftOfficeCacheFiles
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word"
     }
+
+	# Source: https://learn.microsoft.com/es-es/office/dev/add-ins/testing/clear-cache
+	if (Test-Path "C:\users\$user\AppData\Local\Microsoft\Office\16.0\Wef")
+	{
+		Write-Output "Clearing Office cache"
+
+		Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Office\16.0\Wef"
+	}
 }
 
 #------------------------------------------------------------------#
