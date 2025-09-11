@@ -451,6 +451,8 @@ Function Clear-TeamsCacheFiles
         {
             Remove-Dir "$teamsAppDataPath\$cachePath"
         }
+		# SOURCE: https://learn.microsoft.com/es-es/microsoftteams/troubleshoot/teams-administration/clear-teams-cache
+		Remove-Dir "C:\users\$user\appdata\local\Packages\MSTeams_8wekyb3d8bbwe\LocalCache\Microsoft\MSTeams"
     }
 }
 
