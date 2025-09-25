@@ -181,7 +181,7 @@ function CheckService {
 
 	if ($DryRun)
 	{
-		return $true
+		return $false
 	}
 
 	try {
