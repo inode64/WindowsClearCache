@@ -294,7 +294,7 @@ Function Get-StorageSize
 }
 
 #------------------------------------------------------------------#
-#- Remove-Dir                                               #
+#- Remove-Dir                                                      #
 #------------------------------------------------------------------#
 Function Remove-Dir
 {
@@ -479,7 +479,7 @@ Function Clear-ThunderbirdCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-EpicGamesCacheFiles                                     #
+#- Clear-EpicGamesCacheFiles                                       #
 #------------------------------------------------------------------#
 Function Clear-EpicGamesCacheFiles
 {
@@ -488,7 +488,7 @@ Function Clear-EpicGamesCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-BattleNetCacheFiles                                     #
+#- Clear-BattleNetCacheFiles                                       #
 #------------------------------------------------------------------#
 Function Clear-BattleNetCacheFiles
 {
@@ -497,7 +497,7 @@ Function Clear-BattleNetCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-WindowsDefenderBackups                                    #
+#- Clear-WoltersKluwer                                             #
 #------------------------------------------------------------------#
 Function Clear-WoltersKluwer
 {
@@ -510,7 +510,7 @@ Function Clear-WoltersKluwer
 }
 
 #------------------------------------------------------------------#
-#- Clear-SteamCacheFiles                                     #
+#- Clear-SteamCacheFiles                                           #
 #------------------------------------------------------------------#
 Function Clear-SteamCacheFiles
 {
@@ -519,7 +519,7 @@ Function Clear-SteamCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-LolScreenSaverCacheFiles                                     #
+#- Clear-LolScreenSaverCacheFiles                                  #
 #------------------------------------------------------------------#
 Function Clear-LolScreenSaverCacheFiles
 {
@@ -528,7 +528,7 @@ Function Clear-LolScreenSaverCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-DiscordCacheFiles                                     #
+#- Clear-DiscordCacheFiles                                         #
 #------------------------------------------------------------------#
 Function Clear-DiscordCacheFiles
 {
@@ -537,7 +537,7 @@ Function Clear-DiscordCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-AVGCacheFiles                                     #
+#- Clear-AVGCacheFiles                                             #
 #------------------------------------------------------------------#
 Function Clear-AVGCacheFiles
 {
@@ -580,7 +580,7 @@ Function Clear-iTunesCacheFiles
 }
 
 #------------------------------------------------------------------#
-#- Clear-AcrobatCacheFiles                                     #
+#- Clear-AcrobatCacheFiles                                         #
 #------------------------------------------------------------------#
 Function Clear-AcrobatCacheFiles
 {
