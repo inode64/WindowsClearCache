@@ -611,8 +611,12 @@ Function Clear-MicrosoftOfficeCacheFiles
     {
         Write-Output "Clearing Outlook cache"
 
-        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.ost"
-        Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\*.pst"
+        # Do not delete OST/PST files—removing them wipes mailbox data and forces Outlook to re-authenticate.
+        $outlookCachePaths = @("RoamCache", "Offline Address Books")
+        ForEach ($cachePath in $outlookCachePaths)
+        {
+            Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Outlook\$cachePath"
+        }
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.MSO"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
         Remove-Dir "C:\users\$user\AppData\Local\Microsoft\Windows\Temporary Internet Files\Content.Word"
@@ -680,9 +684,19 @@ Function Clear-AppxPackageCacheFiles
     $DirName = "C:\users\$user\AppData\Local\Packages"
     if ((Test-Path "$DirName"))
     {
+        # Skip packages that store authentication tokens so we don't log users out of Outlook/Teams.
+        $protectedPackages = @(
+            "Microsoft.AAD.BrokerPlugin_*",
+            "MSTeams_*"
+        )
         $possibleCachePaths = @("AC", "TempState", "LocalState\\Cache")
         ForEach ($Package in Get-ChildItem "$DirName" -Directory)
         {
+            if ($protectedPackages | Where-Object { $Package.Name -like $_ })
+            {
+                Write-Verbose "Skipping app package cache for $($Package.Name) because it stores sign-in state"
+                continue
+            }
             ForEach ($cachePath in $possibleCachePaths)
             {
                 Remove-Dir "$($Package.FullName)\$cachePath"
